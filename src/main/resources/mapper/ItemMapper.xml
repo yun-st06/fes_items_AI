@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.ItemMapper">
+
+<resultMap id="ItemResultMap" type="com.example.app.domain.Item">
+     <id property="id"   column="id" />
+     <result property="userId"  column="user_id" />     
+     <result property="festivalId"  column="festival_id" /> 
+     <result property="festivalName" column="festival_name"/>   
+     <result property="itemName"  column="item_name" />     
+     <result property="category"  column="category" />     
+     <result property="quantity"  column="quantity" />     
+     <result property="createdAt"  column="created_at" />     
+     <result property="updatedAt"  column="update_at" />     
+  </resultMap> 
+  
+  
+  <select id="findAll" resultMap="ItemResultMap">
+  SELECT
+    i.id,
+    i.user_id,
+    i.festival_id,
+    i.item_name,
+    i.category,
+    i.quantity,
+    i.created_at,
+    i.updated_at,
+    f.fes_name AS festival_name
+  FROM item i
+  LEFT JOIN festival f ON i.festival_id = f.id
+</select>
+ 
+
+  <select id="findById" resultMap="ItemResultMap">
+    SELECT * FROM item
+    WHERE id =#{id}
+ </select>
+ 
+ <insert id ="insert" parameterType="com.example.app.domain.Item">
+      INSERT INTO item(
+          user_id,festival_id,item_name,category,quantity,created_at,update_at)
+        VALUES
+          (#{userId},#{festivalId},#{itemName},#{category},#{quantity},#{createdAt},#{updateAt})
+ </insert>
+ 
+ <update id="update" parameterType="com.example.app.domain.Item">
+     UPDATE item
+      SET user_id = #{userId},
+          festival_id = #{festivalId},
+          item_name = #{itemName},
+          category = #{category},
+          quantity = #{quantity},
+          updated_at =#{updatedAt}
+       WHERE id =#{id}
+  </update>
+
+ <delete id="delete"  parameterType="com.example.app.domain.Item">
+    DELETE FROM item WHERE id =#{id}
+</delete>
+
+</mapper>

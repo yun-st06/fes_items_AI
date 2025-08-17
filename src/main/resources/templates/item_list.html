@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>持ち物一覧</title>
+</head>
+<body>
+<h2>FES★持ち物一覧</h2>
+<p th:text="${'こんにちは！'+loginUser.name + 'さん！'}"></p>
+
+<form th:action="@{/item/list}" method="get">
+	フェス名：
+	<select name="festivalId">
+		<option value="">---選択---</option>
+		<option th:each="festival: ${festivalList}"
+		        th:value="${festival.id}"
+		        th:text="${festival.fesName}"
+		        th:selected="${festival.id==selectedFestivalId}"></option>
+    </select>
+    カテゴリ：
+	<select name="category">
+		<option value="">---選択---</option>
+		<option value="必須！">必須！</option>
+		<option value="衣類">衣類</option>
+		<option value="化粧品">化粧品</option>
+		<option value="食品">食品</option>
+　　　</select>
+	<button type="submit">検索</button>
+	<a th:href="@{/item/list}">リセット</a>
+</form>
+
+<table border="1">
+	<tr>
+	  <th>NO</th>	
+	  <th>フェス名</th>	
+	  <th>持ち物名</th>	
+	  <th>カテゴリ</th>	
+	  <th>数量</th>	
+	  <th>操作</th>	
+	</tr>
+	<tr th:each="item,iterStat : ${itemList}">
+		<td th:text="${iterStat.index +1}"></td>
+		<td th:text="${item.festivalName}"></td>
+		<td th:text="${item.itemName}"></td>
+		<td th:text="${item.category}"></td>
+		<td th:text="${item.quantity}"></td>
+		<td>
+			<a th:href="@{'/item/edit/' +${item.id}}">編集</a>
+			<a th:href="@{'/item/delete/' +${item.id}}" onclick="return confirm('削除しますか？')">削除</a>
+		</td>
+     </tr>
+	</table>
+
+   <a th:href="@{/item/new}">新規持ち物登録</a>
+   <a th:href="@{/logout}">ログアウト</a>	
+</body>
+
+</html>
