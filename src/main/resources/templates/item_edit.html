@@ -1,12 +1,41 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8">
-  <title>持ち物編集</title>
+	<meta charset="UTF-8">
+	<title>持ち物編集</title>
 </head>
+
 <body>
 	<h2>NEW★持ち物編集</h2>
+
+	<form th:action="@{/item/edit}" method="post" th:object="${item}">
+		<input type="hidden" th:field="*{id}" />
+		持ち物名:　<input type="text" th:field="*{itemName}" /><br />
+		カテゴリ:
+		<select th:field="*{category}">
+			<option value="">---選択---</option>
+			<option value="必須">必須</option>
+			<option value="衣類">衣類</option>
+			<option value="化粧品">化粧品</option>
+			<option value="食品">食品</option>
+		</select><br />
+		フェス名：　
+		<select th:field="*{festivalId}">
+			<option value="">---選択---</option>
+			<option th:each="festival : ${festivalList}" th:value="${festival.id}" th:text="${festival.fesName}">
+			</option>
+		</select><br />
+		数量:
+		<select th:field="*{quantity}">
+			<option th:each="i : ${#numbers.sequence(1,10)}" th:value="${i}" th:text="${i}"></option>
+		</select><br />
+		<button type="submit">更新</button>
+	</form>
+
+	<a th:href="@{/item/list}">戻る</a>
 	
-	
-</body>	
-	</html>
+
+</body>
+
+</html>

@@ -31,6 +31,28 @@
   LEFT JOIN festival f ON i.festival_id = f.id
 </select>
  
+ <select id="search" resultMap="ItemResultMap">
+  SELECT
+    i.id,
+    i.user_id,
+    i.festival_id,
+    i.item_name,
+    i.category,
+    i.quantity,
+    i.created_at,
+    i.updated_at,
+    f.fes_name AS festival_name
+  FROM item i
+  LEFT JOIN festival f ON i.festival_id = f.id
+  <where>
+    <if test="category != null and category != ''">
+      AND i.category = #{category}
+    </if>
+    <if test="festivalId != null">
+      AND i.festival_id = #{festivalId}
+    </if>
+  </where>
+</select>
 
   <select id="findById" resultMap="ItemResultMap">
     SELECT * FROM item

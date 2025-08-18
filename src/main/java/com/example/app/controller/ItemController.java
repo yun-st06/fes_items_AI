@@ -1,4 +1,6 @@
 package com.example.app.controller;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,13 +8,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.app.domain.Item;
 import com.example.app.domain.User;
 import com.example.app.service.FestivalService;
 import com.example.app.service.ItemService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 
@@ -26,7 +28,9 @@ public class ItemController{
 	
 	
 @GetMapping("/list")
-	public String listItems(Model model, HttpSession session) {
+	public String listItems(@RequestParam(required = false)String category,
+			                @RequestParam(required = false)Integer festivalId,
+                            Model model, HttpSession session) {
 	    User loginUser = (User) session.getAttribute("loginUser");
 
 	    if (loginUser == null) {
@@ -34,8 +38,16 @@ public class ItemController{
 	    }
 
 	    model.addAttribute("loginUser", loginUser);
-	    model.addAttribute("itemList", itemService.findAll());
 	    model.addAttribute("festivalList",festivalService.findAll());
+	    
+	    
+	    if((category != null && !category.isEmpty()) ||
+	    	(festivalId !=null)) {
+	    	    model.addAttribute("itemList",itemService.search(category,festivalId));
+	    }else {
+	    	model.addAttribute("itemList",itemService.findAll());
+	    	
+	    }
 	    
         return "item_list";
 	}

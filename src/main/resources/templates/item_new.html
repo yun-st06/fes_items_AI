@@ -12,14 +12,14 @@
 		カテゴリ：
 	<select th:field="*{category}">
 		<option value="">---選択---</option>
-		<option value="必須！">必須！</option>
+		<option value="必須">必須</option>
 		<option value="衣類">衣類</option>
 		<option value="化粧品">化粧品</option>
 		<option value="食品">食品</option>
 	</select><br/>
 	    フェス名：
 	     <select th:field="*{festivalId}">
-       　　 <option value="">---選択---</option>
+           <option value="">---選択---</option>
             <option th:each="festival : ${festivalList}"
                     th:value="${festival.id}"
                     th:text="${festival.fesName}"></option>

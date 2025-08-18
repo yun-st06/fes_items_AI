@@ -21,8 +21,8 @@ public class ItemServiceImpl implements ItemService {
 	}
 	
 	@Override
-	public List<Item> search(String keyword,String category){
-		return itemMapper.search(keyword,category);
+	public List<Item> search(String category,Integer festivalId){
+		return itemMapper.search(category,festivalId);
 		
 	}
 	
@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Override
 	public void update(Item item) {
-		itemMapper.insert(item);
+		itemMapper.update(item);
 		
 	}
 	

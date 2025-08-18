@@ -3,6 +3,7 @@ package com.example.app.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.app.domain.Item;
 
@@ -11,7 +12,8 @@ import com.example.app.domain.Item;
 public interface ItemMapper{
 	
 	    List<Item>findAll();
-	    List<Item>search(String Kw,String cat);
+	    List<Item>search(@Param("category") String category,
+	    		         @Param("festivalId")Integer festivalId);
         Item findById(long id);
         int insert(Item item);
         int update(Item item);
