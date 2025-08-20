@@ -1,16 +1,17 @@
 package com.example.app.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.Item;
 import com.example.app.domain.User;
@@ -55,18 +56,25 @@ public class ItemController {
 
 	//持ち物新規登録
 	@GetMapping("/new")
-	public String showNewForm(Model model) {
+	public String showNewForm(HttpSession session,Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+	    if (loginUser == null) {
+	        return "redirect:/login";
+	    }
+		
 		model.addAttribute("itemForm", new ItemForm());
 		model.addAttribute("festivalList", festivalService.findAll());
+		
 		return "item_new";
 	}
 
 	//持ち物新規登録のエラー表示
 	@PostMapping("/new")
-	public String register(@Validated ItemForm form,
+	public String register(@Valid ItemForm form,
 			BindingResult result,
 			Model model,
-			HttpSession session) {
+			HttpSession session,
+			RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors()) {
 			model.addAttribute("festivalList", festivalService.findAll());
@@ -74,7 +82,11 @@ public class ItemController {
 		}
 
 		User loginUser = (User) session.getAttribute("loginUser");
-
+		if (loginUser == null) {
+		    return "redirect:/login"; // ログイン画面に飛ばす
+		}
+		
+	
 		//DTOからDBへ登録処理
 		Item item = new Item();
 		item.setItemName(form.getItemName());
@@ -84,7 +96,10 @@ public class ItemController {
 		item.setUserId(loginUser.getId());
 
 		itemService.insert(item);
-		return "redirect:/item/List";
+		
+		
+		redirectAttributes.addFlashAttribute("message","登録しました!");
+		return "redirect:/item/list";
 	}
 
 	//持ち物編集
@@ -107,8 +122,11 @@ public class ItemController {
 
 	//持ち物編集のエラー表示
 	@PostMapping("/edit/{id}")
-	public String update(@Validated ItemForm form, BindingResult result,
-			Model model, HttpSession session) {
+	public String update(@Valid ItemForm form, 
+			             BindingResult result,
+			             Model model, 
+			             HttpSession session,
+			             RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors()) {
 			model.addAttribute("festivalList", festivalService.findAll());
@@ -128,20 +146,23 @@ public class ItemController {
 		item.setUserId(loginUser.getId());
 
 		itemService.update(item);
+		
+		redirectAttributes.addFlashAttribute("message","更新しました！");
+		
+		
 		return "redirect:/item/list";
 
 	}
 
-	/*@PostMapping("/edit/{id}")と重複しているためコメントアウト
-	 @PostMapping("/update")
-	public String updateItem(@ModelAttribute Item item) {
-		itemService.update(item);
-		return "redirect:/item/list";
-	}*/
 
 	@GetMapping("/delete/{id}")
-	public String deleteItem(@PathVariable("id") Integer id) {
+	public String deleteItem(@PathVariable("id") long id,
+		                     RedirectAttributes redirectAttributes) {
 		itemService.delete(id);
+		
+		redirectAttributes.addFlashAttribute("message","削除しました!");
+		
+		
 		return "redirect:/item/list";
 
 	}

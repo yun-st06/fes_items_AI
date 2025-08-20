@@ -8,12 +8,13 @@
    WHERE email =#{email}
  </select>
  
- <insert id ="insert" parameterType="com.example.app.domain.User">
+ <insert id ="insert" parameterType="com.example.app.domain.User" useGeneratedKeys="true" keyProperty="id">
    INSERT INTO user(name,email,password,created_at)
    VALUES (#{name},#{email},#{password},#{createdAt})
  </insert>
  
- <select id="findByEmailAndPassword" resultType="com.example.app.domain.User">
+ <select id="findByEmailAndPassword" resultType="com.example.app.domain.User"
+              >
    SELECT *FROM user
    WHERE email = #{email} AND password= #{password}
 </select>

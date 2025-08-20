@@ -1,24 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 	<meta charset="UTF-8">
-    <title>ログイン</title>
+	<title>ログイン</title>
 </head>
+
 <body>
-    <h2>FESTIVAL　GO!LIST</h2>
+	<h2>FESTIVAL　GO!LIST</h2>
 
-    <form th:action="@{/login}" method="post" th:object="${user}">
-        <label>Email</label>
-        <input type="text" th:field="*{email}" />
-        <br/>
-        <label>パスワード</label>
-        <input type="password" th:field="*{password}" />
-        <br/>
-        <button type="submit">ログイン</button>
-    </form>
+	<p th:if="${loginError}" th:text="${loginError}" style="color:red;"></p>
 
-    <p th:if="${loginError}" th:text="${loginError}" style="color: red;"></p>
+	<form th:action="@{/login}" method="post" th:object="${loginForm}">
+		<div>
+			<label>Email</label>
+			<input type="email" th:field="*{email}" />
+			<p th:errors="*{email}" style="color:red;"></p>
+		</div>
 
-    <a th:href="@{/signup}">新規登録</a>
+		<div>
+			<label>パスワード</label>
+			<input type="password" th:field="*{password}" />
+			<p th:errors="*{password}" style="color:red;"></p>
+		</div>
+
+
+		<button type="submit">ログイン</button>
+	</form>
+
+	<a th:href="@{/signup}">新規アカウント作成はこちら</a>
 </body>
+
 </html>

@@ -19,4 +19,9 @@ public interface ItemMapper{
         int update(Item item);
         int delete(long id);
         
+        int countItems();
+        
+        List<Item> findItemByPage(@Param("offset")int offset,@Param("limit") int Limit);
+        
+        
    }

@@ -14,7 +14,7 @@
      <result property="createdAt"  column="created_at" />     
      <result property="updatedAt"  column="update_at" />     
   </resultMap> 
-  
+                       
   
   <select id="findAll" resultMap="ItemResultMap">
   SELECT
@@ -61,9 +61,9 @@
  
  <insert id ="insert" parameterType="com.example.app.domain.Item">
       INSERT INTO item(
-          user_id,festival_id,item_name,category,quantity,created_at,update_at)
+          user_id,festival_id,item_name,category,quantity,created_at,updated_at)
         VALUES
-          (#{userId},#{festivalId},#{itemName},#{category},#{quantity},#{createdAt},#{updateAt})
+          (#{userId},#{festivalId},#{itemName},#{category},#{quantity},#{createdAt},#{updatedAt})
  </insert>
  
  <update id="update" parameterType="com.example.app.domain.Item">
@@ -77,7 +77,7 @@
        WHERE id =#{id}
   </update>
 
- <delete id="delete"  parameterType="com.example.app.domain.Item">
+ <delete id="delete"  parameterType="long">
     DELETE FROM item WHERE id =#{id}
 </delete>
 

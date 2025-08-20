@@ -9,20 +9,20 @@
 <body>
 	<h2>NEW★持ち物編集</h2>
 
-	<form th:action="@{/item/edit}" method="post" th:object="${itemForm}">
+	<form th:action="@{/item/edit/{id}}" method="post" th:object="${itemForm}">
 		<input type="hidden" th:field="*{id}" />
 
 
 
 		<div>
-			<lavel>持ち物名:</lavel>
+			<label>持ち物名:</label>
 			<input type="text" th:field="*{itemName}" />
 			<div th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" class="error-message"></div>
 		</div>
 
 
 		<div>
-			<lavel>カテゴリ:</lavel>
+			<label>カテゴリ:</label>
 			<div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="error-message"></div>
 			<select th:field="*{category}">
 				<option value="">---選択---</option>
@@ -34,7 +34,7 @@
 		</div>
 
 		<lavel>
-			<lavel>フェス名：</lavel>
+			<label>フェス名：</label>
 			<div th:if="${#fields.hasErrors('festivalId')}" th:errors="*{festivalId}" class="error-message"></div>
 			<select th:field="*{festivalId}">
 				<option value="">---選択---</option>
@@ -45,7 +45,7 @@
 
 
 			<div>
-				<lavel>数量:</lavel>
+				<label>数量:</label>
 				<div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="error-message"></div>
 				<select th:field="*{quantity}">
 					<option th:each="i : ${#numbers.sequence(1,10)}" th:value="${i}" th:text="${i}"></option>
