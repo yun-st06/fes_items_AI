@@ -19,9 +19,11 @@ public interface ItemMapper{
         int update(Item item);
         int delete(long id);
         
+        //ページネーション用
         int countItems();
-        
         List<Item> findItemByPage(@Param("offset")int offset,@Param("limit") int Limit);
         
-        
+        //ページネーション検索
+        List<Item> searchByPage(String category, Integer festivalId, int offset, int limit);
+    	int countSearchItems(String category, Integer festivalId);
    }

@@ -1,7 +1,6 @@
 package com.example.app.controller;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +18,8 @@ import com.example.app.form.ItemForm;
 import com.example.app.service.FestivalService;
 import com.example.app.service.ItemService;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -29,42 +30,87 @@ public class ItemController {
 	private final ItemService itemService;
 	private final FestivalService festivalService;
 
-	//持ち物一覧表示
-	@GetMapping("/list")
-	public String listItems(@RequestParam(required = false) String category,
-			@RequestParam(required = false) Integer festivalId,
-			Model model, HttpSession session) {
-		User loginUser = (User) session.getAttribute("loginUser");
+	/*持ち物一覧表示①
+		@GetMapping("/list")
+		public String listItems(@RequestParam(required = false) String category,
+				@RequestParam(required = false) Integer festivalId,
+				Model model, HttpSession session) {
+			User loginUser = (User) session.getAttribute("loginUser");
+	
+			if (loginUser == null) {
+				return "redirect:/login";
+			}
+	
+			model.addAttribute("loginUser", loginUser);
+			model.addAttribute("festivalList", festivalService.findAll());
+	
+			if ((category != null && !category.isEmpty()) ||
+					(festivalId != null)) {
+				model.addAttribute("itemList", itemService.search(category, festivalId));
+			} else {
+				model.addAttribute("itemList", itemService.findAll());
+	
+			}
+	
+			return "item_list";
+		}*/
 
+	//持ち物一覧②検索条件でページネーション付けたバージョン
+	@GetMapping("/list")
+	public String listItems(
+			@RequestParam(required = false) String category,
+			@RequestParam(required = false) Integer festivalId,
+			@RequestParam(defaultValue = "1") int page,
+			Model model,
+			HttpSession session) {
+
+		User loginUser = (User) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			return "redirect:/login";
 		}
 
+		// 共通情報
 		model.addAttribute("loginUser", loginUser);
 		model.addAttribute("festivalList", festivalService.findAll());
 
-		if ((category != null && !category.isEmpty()) ||
-				(festivalId != null)) {
-			model.addAttribute("itemList", itemService.search(category, festivalId));
-		} else {
-			model.addAttribute("itemList", itemService.findAll());
+		int limit = 10;
+		int offset = (page - 1) * limit;
 
+		List<Item> itemList;
+		int totalItems;
+
+		if ((category != null && !category.isEmpty()) || (festivalId != null)) {
+			// 絞り込みあり
+			itemList = itemService.searchByPage(category, festivalId, offset, limit);
+			totalItems = itemService.countSearchItems(category, festivalId);
+		} else {
+			// 絞り込みなし
+			itemList = itemService.findItemByPage(offset, limit);
+			totalItems = itemService.countItems();
 		}
+
+		int totalPages = (int) Math.ceil((double) totalItems / limit);
+
+		model.addAttribute("itemList", itemList);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("category", category); // フォーム再表示用
+		model.addAttribute("festivalId", festivalId); // フォーム再表示用
 
 		return "item_list";
 	}
 
 	//持ち物新規登録
 	@GetMapping("/new")
-	public String showNewForm(HttpSession session,Model model) {
+	public String showNewForm(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
-	    if (loginUser == null) {
-	        return "redirect:/login";
-	    }
-		
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
 		model.addAttribute("itemForm", new ItemForm());
 		model.addAttribute("festivalList", festivalService.findAll());
-		
+
 		return "item_new";
 	}
 
@@ -83,10 +129,9 @@ public class ItemController {
 
 		User loginUser = (User) session.getAttribute("loginUser");
 		if (loginUser == null) {
-		    return "redirect:/login"; // ログイン画面に飛ばす
+			return "redirect:/login"; // ログイン画面に飛ばす
 		}
-		
-	
+
 		//DTOからDBへ登録処理
 		Item item = new Item();
 		item.setItemName(form.getItemName());
@@ -96,9 +141,8 @@ public class ItemController {
 		item.setUserId(loginUser.getId());
 
 		itemService.insert(item);
-		
-		
-		redirectAttributes.addFlashAttribute("message","登録しました!");
+
+		redirectAttributes.addFlashAttribute("message", "登録しました!");
 		return "redirect:/item/list";
 	}
 
@@ -122,11 +166,11 @@ public class ItemController {
 
 	//持ち物編集のエラー表示
 	@PostMapping("/edit/{id}")
-	public String update(@Valid ItemForm form, 
-			             BindingResult result,
-			             Model model, 
-			             HttpSession session,
-			             RedirectAttributes redirectAttributes) {
+	public String update(@Valid ItemForm form,
+			BindingResult result,
+			Model model,
+			HttpSession session,
+			RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors()) {
 			model.addAttribute("festivalList", festivalService.findAll());
@@ -146,25 +190,22 @@ public class ItemController {
 		item.setUserId(loginUser.getId());
 
 		itemService.update(item);
-		
-		redirectAttributes.addFlashAttribute("message","更新しました！");
-		
-		
+
+		redirectAttributes.addFlashAttribute("message", "更新しました！");
+
 		return "redirect:/item/list";
 
 	}
-
 
 	@GetMapping("/delete/{id}")
 	public String deleteItem(@PathVariable("id") long id,
-		                     RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes) {
 		itemService.delete(id);
-		
-		redirectAttributes.addFlashAttribute("message","削除しました!");
-		
-		
+
+		redirectAttributes.addFlashAttribute("message", "削除しました!");
+
 		return "redirect:/item/list";
 
 	}
-	
+
 }
