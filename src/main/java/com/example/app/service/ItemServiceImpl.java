@@ -32,24 +32,46 @@ public class ItemServiceImpl implements ItemService {
 	}
 	
 	@Override
-	public void insert(Item item) {
-		itemMapper.insert(item);
+	public int insert(Item item) {
+		return itemMapper.insert(item);
 		
 	}
 	
 	@Override
-	public void update(Item item) {
-		itemMapper.update(item);
+	public int update(Item item) {
+		return itemMapper.update(item);
 		
 	}
 	
 	@Override
-	public void delete(long id) {
-		itemMapper.delete(id);
+	public int delete(long id) {
+		return itemMapper.delete(id);
 		
 	}
 	
+	//ページネーション用:全件
+	@Override
+	public int countItems() {
+		return itemMapper.countItems();
+		
+	}
 	
+	@Override
+	public List<Item>findItemByPage(int offset,int limit){
+		return itemMapper.findItemByPage(offset, limit);
+		
+	}
 	
-	
+	//ページネーション用:検索条件付き
+	@Override
+	public List<Item> searchByPage(String category, Integer festivalId, int offset, int limit) {
+		return itemMapper.searchByPage(category, festivalId, offset, limit);
+	}
+
+	@Override
+	public int countSearchItems(String category, Integer festivalId) {
+		return itemMapper.countSearchItems(category, festivalId);
+	}
 }
+	
+

@@ -16,7 +16,27 @@
 		<result property="updatedAt" column="update_at" />
 	</resultMap>
 
+<<<<<<< HEAD
+=======
+	<!-- 全件取得 -->
+	<select id="findAll" resultMap="ItemResultMap">
+		SELECT
+		i.id,
+		i.user_id,
+		i.festival_id,
+		i.item_name,
+		i.category,
+		i.quantity,
+		i.created_at,
+		i.updated_at,
+		f.fes_name AS festival_name
+		FROM item i
+		LEFT JOIN festival
+		f ON i.festival_id = f.id
+	</select>
+>>>>>>> branch 'master' of https://github.com/yun-st06/fes_items.git
 
+<<<<<<< HEAD
 	<select id="findAll" resultMap="ItemResultMap">
 		SELECT
 		i.id,
@@ -82,5 +102,99 @@
 	<delete id="delete" parameterType="long">
 		DELETE FROM item WHERE id =#{id}
 	</delete>
+=======
+	<!-- 条件検索 -->
+	<select id="search" resultMap="ItemResultMap">
+		SELECT
+		i.id,
+		i.user_id,
+		i.festival_id,
+		i.item_name,
+		i.category,
+		i.quantity,
+		i.created_at,
+		i.updated_at,
+		f.fes_name AS festival_name
+		FROM item i
+		LEFT
+		JOIN festival f ON i.festival_id = f.id
+		<where>
+			<if test="category != null and category != ''">
+				AND i.category = #{category}
+			</if>
+			<if test="festivalId != null">
+				AND i.festival_id = #{festivalId}
+			</if>
+		</where>
+	</select>
+
+	<!-- 主キーで1件取得 -->
+	<select id="findById" resultMap="ItemResultMap">
+		SELECT * FROM item
+		WHERE id
+		=#{id}
+	</select>
+
+	<!-- 新規登録 -->
+	<insert id="insert" parameterType="com.example.app.domain.Item">
+		INSERT INTO item(
+		user_id,festival_id,item_name,category,quantity,created_at,updated_at)
+		VALUES
+		(#{userId},#{festivalId},#{itemName},#{category},#{quantity},#{createdAt},#{updatedAt})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.example.app.domain.Item">
+		UPDATE item
+		SET user_id =
+		#{userId},
+		festival_id = #{festivalId},
+		item_name = #{itemName},
+		category = #{category},
+		quantity = #{quantity},
+		updated_at =#{updatedAt}
+		WHERE id =#{id}
+	</update>
+
+	<!-- 削除 -->
+	<delete id="delete" parameterType="long">
+		DELETE FROM item WHERE id
+		=#{id}
+	</delete>
+
+	<!-- 🎯 ページネーション：全件 -->
+	<select id="countItems" resultType="int">
+		SELECT COUNT(*) FROM item
+	</select>
+
+
+	<select id="findItemByPage"
+		resultType="com.example.app.domain.Item">
+		SELECT * FROM item
+		ORDER BY id
+		LIMIT #{limit} OFFSET
+		#{offset}
+	</select>
+
+	<!-- 🔍 ページネーション：検索つき -->
+	<select id="countSearchItems" resultType="int">
+		SELECT COUNT(*) FROM
+		item
+		WHERE (#{category} IS NULL OR category = #{category})
+		AND
+		(#{festivalId} IS NULL OR festival_id = #{festivalId})
+	</select>
+
+	<select id="searchByPage"
+		resultType="com.example.app.domain.Item">
+		SELECT * FROM item
+		WHERE (#{category} IS NULL OR category =
+		#{category})
+		AND (#{festivalId} IS NULL OR festival_id = #{festivalId})
+		ORDER BY id
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+>>>>>>> branch 'master' of https://github.com/yun-st06/fes_items.git
 
 </mapper>

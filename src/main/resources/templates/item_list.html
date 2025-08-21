@@ -54,7 +54,19 @@
 			</td>
 		</tr>
 	</table>
+    
+    <!-- ページネーションリンク -->
+	<div>
+		<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+			<a th:href="@{|/item/list?page=${pageNum}|}"
+			   th:text="${pageNum}"
+			   th:style="${pageNum == currentPage} ? 'font-weight:bold; color:red;' : ''">1</a>
+			<span th:if="${pageNum != totalPages}"> | </span>
+		</span>
+	</div>
 
+	<br>
+    
 	<a th:href="@{/item/new}">新規持ち物登録</a>
 	<a th:href="@{/logout}">ログアウト</a>
 </body>
