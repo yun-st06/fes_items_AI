@@ -4,31 +4,56 @@
 <head>
 	<meta charset="UTF-8">
 	<title>ログイン</title>
+	<link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 
 <body>
-	<h2>FESTIVAL　GO!LIST</h2>
+	<div class="canvas-wrapper">
+		
+		<div class="login-box">
 
-	<p th:if="${loginError}" th:text="${loginError}" style="color:red;"></p>
+			
 
-	<form th:action="@{/login}" method="post" th:object="${loginForm}">
-		<div>
-			<label>Email</label>
-			<input type="email" th:field="*{email}" />
-			<p th:errors="*{email}" style="color:red;"></p>
+			<p th:if="${loginError}" th:text="${loginError}" class="error"></p>
+
+			<form th:action="@{/login}" method="post" th:object="${loginForm}">
+				<div>
+					<label>ID
+					</label>
+					<input type="email" th:field="*{email}" />
+					<p th:errors="*{email}" class="error"></p>
+				</div>
+
+				<div>
+					<label>パスワード</label>
+					<input type="password" th:field="*{password}" />
+					<p th:errors="*{password}" class="error"></p>
+				</div>
+
+
+				<button type="submit">ログイン</button>
+			</form>
+
+			<div class="link">
+				<a th:href="@{/signup}">新規アカウント作成はこちら</a>
+			</div>
+
 		</div>
 
-		<div>
-			<label>パスワード</label>
-			<input type="password" th:field="*{password}" />
-			<p th:errors="*{password}" style="color:red;"></p>
-		</div>
+	</div>
+
+	<script>
+		// Enterキーでもログインできるように
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Enter") {
+				document.querySelector("form").submit();
+			}
+		});
+	</script>
 
 
-		<button type="submit">ログイン</button>
-	</form>
 
-	<a th:href="@{/signup}">新規アカウント作成はこちら</a>
+
 </body>
 
 </html>

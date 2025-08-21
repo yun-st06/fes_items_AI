@@ -1,0 +1,146 @@
+@charset "UTF-8";
+
+body {
+	margin: 0;
+	padding: 0;
+	background-image: url('../images/festival_bg.png');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	height: 100vh;
+	font-family: "Helvetica", "Arial", sans-serif;
+}
+
+
+.canvas-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	position: relative;
+}
+
+.bg-img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 390px;     /* Canvaの元画像サイズに合わせる */
+	height: auto;
+	z-index: 0;
+	border-radius: 20px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.login-box {
+	background: rgba(255, 192, 203, 0.85);
+	padding: 40px;
+	border-radius: 20px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+	width: 300px;
+	position: absolute;     /* これも必要！ */
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1;   /* ←★ここ追加！画像より上に表示 */
+	}
+
+.login-box h2 {
+	text-align: center;
+	font-size: 28px;
+	margin-bottom: 20px;
+	color: #fff;
+	text-shadow: 2px 2px 4px #f06292;
+}
+
+label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: bold;
+	color: #fff;
+}
+
+input[type="email"],
+input[type="password"] {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: none;
+	border-radius: 8px;
+	box-shadow: inset 1px 1px 3px #ccc;
+}
+
+button {
+	width: 100%;
+	padding: 10px;
+	background-color: #ff4081;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: 0.3s;
+}
+
+button:hover {
+	background-color: #ec407a;
+}
+
+.link {
+	text-align: center;
+	margin-top: 15px;
+}
+
+.link a {
+	color: white;
+	text-decoration: underline;
+}
+
+.error {
+	color: yellow;
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+/* 🌟 レスポンシブ対応ここから */
+@media screen and (max-width: 480px) {
+	.bg-img {
+		width: 300px;
+	}
+
+	.login-box {
+		width: 90%;
+		padding: 20px;
+	}
+
+	input[type="email"],
+	input[type="password"],
+	button {
+		font-size: 14px;
+	}
+}
+
+@media screen and (max-width: 768px) and (min-width: 481px) {
+	.bg-img {
+		width: 350px;
+	}
+
+	.login-box {
+		width: 80%;
+		padding: 30px;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	.bg-img {
+		width: 430px;
+	}
+
+	.login-box {
+		width: 320px;
+	}
+}
+
+
+
