@@ -59,6 +59,22 @@
     WHERE id =#{id}
  </select>
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  <insert id ="insert" parameterType="com.example.app.domain.Item">
       INSERT INTO item(
           user_id,festival_id,item_name,category,quantity,created_at,updated_at)
