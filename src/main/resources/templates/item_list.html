@@ -4,20 +4,26 @@
 <head>
 	<meta charset="UTF-8">
 	<title>持ち物一覧</title>
-	
-	
-	
-	
+
+	<link rel="stylesheet" th:href="@{/css/item_list.css}">
+	<script th:src="@{/js/item_list.js}" defer></script>
+
 </head>
 
 <body>
-	<h2>FES★持ち物一覧</h2>
-	<p th:text="${'こんにちは！'+session.loginUser.name + 'さん！'}"></p>
+	<div class="logo-container">
+		<img src="/images/logo.png" alt="ロゴ" class="logo-image">
+	</div>
 
-	<p th:if="${message}" th:text="${message}" style="color:green;font-weight:bold;"></p>
+	
+	<div class="content-wrapper">
+	<h2>FES もちものリスト</h2>
+	<p class="hello-message" th:text="${'こんにちは！'+session.loginUser.name + 'さん！'}"></p>
+
+	<p th:if="${message}" th:text="${message}" class="success-message"></p>
 
 
-	<form th:action="@{/item/list}" method="get">
+	<form th:action="@{/item/list}" method="get" class="filter-form">
 		フェス名：
 		<select name="festivalId">
 			<option value="">---選択---</option>
@@ -31,48 +37,53 @@
 			<option value="衣類">衣類</option>
 			<option value="化粧品">化粧品</option>
 			<option value="食品">食品</option>
-			　　　
 		</select>
+
+
 		<button type="submit">検索</button>
 		<a th:href="@{/item/list}">リセット</a>
 	</form>
+	
+	<!--もちものリストの中の更にスクロールバー
+		<div class="item-list-wrapper">-->
 
-	<table border="1">
-		<tr>
-			<th>NO</th>
-			<th>フェス名</th>
-			<th>持ち物名</th>
-			<th>カテゴリ</th>
-			<th>数量</th>
-			<th>操作</th>
-		</tr>
-		<tr th:each="item,iterStat : ${itemList}">
-			<td th:text="${iterStat.index +1}"></td>
-			<td th:text="${item.festivalName}"></td>
-			<td th:text="${item.itemName}"></td>
-			<td th:text="${item.category}"></td>
-			<td th:text="${item.quantity}"></td>
-			<td>
+	<div class="item-list">
+		<div th:each="item,iterStat : ${itemList}" class="item-card">
+			
+			<p><strong>NO:</strong><span th:text="${iterStat.index+1}"></span></p>
+			<p><strong>フェス名:</strong><span th:text="${item.festivalName}"></span></p>
+			<p><strong>持ち物:</strong><span th:text="${item.itemName}"></span></p>
+			<p>
+				<p><strong>カテゴリ:</strong><span th:text="${item.category}"></span>
+				/ 数量:<span th:text="${item.quantity}"></span></spa>
+				
+			<p class="action-buttons">
+				<strong>操作</strong>
 				<a th:href="@{/item/edit/{id}(id=${item.id})}">編集</a>
 				<a th:href="@{'/item/delete/' +${item.id}}" onclick="return confirm('削除しますか？')">削除</a>
-			</td>
-		</tr>
-	</table>
-    
-    <!-- ページネーションリンク -->
-	<div>
+			</p>
+
+		</div>
+	  </div>
+	
+	
+	
+	<!-- ページネーションリンク -->
+	<div class="pagination">
 		<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-			<a th:href="@{|/item/list?page=${pageNum}|}"
-			   th:text="${pageNum}"
-			   th:style="${pageNum == currentPage} ? 'font-weight:bold; color:red;' : ''">1</a>
-			<span th:if="${pageNum != totalPages}"> | </span>
+			<a th:href="@{|/item/list?page=${pageNum}|}" th:text="${pageNum}"
+				th:classappend="${pageNum == currentPage} ? 'active' : ''">1</a>
 		</span>
 	</div>
 
 	<br>
-    
+
 	<a th:href="@{/item/new}">新規持ち物登録</a>
 	<a th:href="@{/logout}">ログアウト</a>
+	
+	<a href="/memo" class="fes-memo-btn">FESメモ</a>
+	</div>
+	
 </body>
 
 </html>

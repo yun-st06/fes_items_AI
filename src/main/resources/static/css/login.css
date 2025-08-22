@@ -1,146 +1,88 @@
 @charset "UTF-8";
 
-body {
-	margin: 0;
-	padding: 0;
-	background-image: url('../images/festival_bg.png');
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	height: 100vh;
-	font-family: "Helvetica", "Arial", sans-serif;
+/* 画面全面の背景 */
+body{
+  margin:0;
+  padding:0;
+  background-image:url('../images/background.png');
+  background-size:cover;           /* 画面いっぱいに */
+  background-position:top center;  /* 上側の景色を基準 */
+  background-repeat:no-repeat;
+  height:100vh;
+  font-family:"Helvetica","Arial",sans-serif;
+}
+
+/* ★ ロゴは画面に対して“固定配置” */
+.logo-container{
+  position:fixed;     /* ← これで背景の上に“独立”して乗る */
+  left:50%;
+  top:5vh;           /* ← ここで上下位置を微調整（12〜18vhで好みへ） */
+  transform:translateX(-50%);
+  z-index:2;
+  pointer-events:none; /* クリックを邪魔しない */
 }
 
 
-.canvas-wrapper {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	position: relative;
+.logo-image{
+  max-width:800px;    /* 必要に応じて 520〜680px で微調整 */
+  height:auto;
 }
 
-.bg-img {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 390px;     /* Canvaの元画像サイズに合わせる */
-	height: auto;
-	z-index: 0;
-	border-radius: 20px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+/* ログインボックスは中央にドン */
+.canvas-wrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  width:100%;
+  position:relative;
+}
+.login-box{
+  width:clamp(320px,36vw,440px);
+  padding:40px 32px;
+  border-radius:20px;
+  background:rgba(255,192,203,.88);
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+  z-index:3;
+  /* ★ ロゴと被らないよう、ほんの少し下げたいときは次を有効化
+     margin-top: 6vh;
+  */
 }
 
-
-.login-box {
-	background: rgba(255, 192, 203, 0.85);
-	padding: 40px;
-	border-radius: 20px;
-	box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-	width: 300px;
-	position: absolute;     /* これも必要！ */
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 1;   /* ←★ここ追加！画像より上に表示 */
-	}
-
-.login-box h2 {
-	text-align: center;
-	font-size: 28px;
-	margin-bottom: 20px;
-	color: #fff;
-	text-shadow: 2px 2px 4px #f06292;
+label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:700;
+  color:#fff;
 }
-
-label {
-	display: block;
-	margin-bottom: 5px;
-	font-weight: bold;
-	color: #fff;
+input[type="email"], input[type="password"]{
+  width:100%;
+  padding:12px 10px;
+  margin-bottom:16px;
+  border:0;
+  border-radius:8px;
+  box-shadow:inset 1px 1px 3px #ccc;
+  font-size:15px;
 }
-
-input[type="email"],
-input[type="password"] {
-	width: 100%;
-	padding: 10px;
-	margin-bottom: 15px;
-	border: none;
-	border-radius: 8px;
-	box-shadow: inset 1px 1px 3px #ccc;
+button{
+  width:100%;
+  padding:11px 12px;
+  background:#ff4081;
+  color:#fff;
+  border:0;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:16px;
+  transition:.2s;
 }
+button:hover{ background:#ec407a; }
 
-button {
-	width: 100%;
-	padding: 10px;
-	background-color: #ff4081;
-	color: white;
-	border: none;
-	border-radius: 8px;
-	cursor: pointer;
-	font-size: 16px;
-	transition: 0.3s;
+.link{ text-align:center; margin-top:14px; }
+.link a{ color:#fff; text-decoration:underline; }
+.error{ color:yellow; font-size:13px; margin-bottom:10px; }
+
+/* 小さい画面はロゴを少し上げる */
+@media (max-width:480px){
+  .logo-container{ top:10vh; }
+  .logo-image{ max-width:80vw; }
 }
-
-button:hover {
-	background-color: #ec407a;
-}
-
-.link {
-	text-align: center;
-	margin-top: 15px;
-}
-
-.link a {
-	color: white;
-	text-decoration: underline;
-}
-
-.error {
-	color: yellow;
-	font-size: 13px;
-	margin-bottom: 10px;
-}
-
-/* 🌟 レスポンシブ対応ここから */
-@media screen and (max-width: 480px) {
-	.bg-img {
-		width: 300px;
-	}
-
-	.login-box {
-		width: 90%;
-		padding: 20px;
-	}
-
-	input[type="email"],
-	input[type="password"],
-	button {
-		font-size: 14px;
-	}
-}
-
-@media screen and (max-width: 768px) and (min-width: 481px) {
-	.bg-img {
-		width: 350px;
-	}
-
-	.login-box {
-		width: 80%;
-		padding: 30px;
-	}
-}
-
-@media screen and (min-width: 1024px) {
-	.bg-img {
-		width: 430px;
-	}
-
-	.login-box {
-		width: 320px;
-	}
-}
-
-
-

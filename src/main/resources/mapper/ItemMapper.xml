@@ -125,15 +125,19 @@
 		(#{festivalId} IS NULL OR festival_id = #{festivalId})
 	</select>
 
-	<select id="searchByPage"
-		resultType="com.example.app.domain.Item">
-		SELECT * FROM item
-		WHERE (#{category} IS NULL OR category =
-		#{category})
-		AND (#{festivalId} IS NULL OR festival_id = #{festivalId})
-		ORDER BY id
-		LIMIT #{limit} OFFSET #{offset}
-	</select>
-
+  <select id="searchByPage" resultType="com.example.app.domain.Item">
+	SELECT 
+		i.id, i.user_id, i.festival_id, i.item_name, i.category, i.quantity,
+		i.created_at, i.updated_at,
+		f.fes_name AS festival_name
+	FROM 
+		item i
+		LEFT JOIN festival f ON i.festival_id = f.id
+	WHERE 
+		(#{category} IS NULL OR i.category = #{category})
+		AND (#{festivalId} IS NULL OR i.festival_id = #{festivalId})
+	ORDER BY i.id
+	LIMIT #{limit} OFFSET #{offset}
+   </select>
 
 </mapper>
