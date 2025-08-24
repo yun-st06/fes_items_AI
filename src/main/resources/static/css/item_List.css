@@ -3,14 +3,22 @@
 /* 先頭あたりに追加 */
 :root{
   /* ロゴの高さぶん。画面高さに応じて 120px〜220px で自動調整 */
-  --logo-offset: clamp(120px, 18vh, 220px);
+  --logo-offset: clamp(140px, 20vh, 240px);
+}
+
+/* 1) ページ全体のスクロールを止めて横ハミ出しも禁止 */
+html, body {
+  height: 100%;
+  overflow: hidden;      /* ← ← ここで“右側のスクロール”を消す（縦も横も） */
+  overflow-x: hidden;
 }
 
 body {
 	font-family: 'Segoe UI', Tahoma, sans-serif;
 	background-color: #fff5f5;
 	color: #333;
-	padding: var(--logo-offset) 0 0;
+	padding: calc(var(--logo-offset) + 40px) 20px 0; /* ← topだけじゃなく右に20pxも */
+  /* 既存の background 等はそのまま */
 	background-image: url('/images/background.png');
 	background-size: cover;
 	background-position: top center;
@@ -24,17 +32,16 @@ body {
   text-align: center;
   position:fixed;     /* ← これで背景の上に“独立”して乗る */
   left:50%;
-  top:1vh;           /* ← ここで上下位置を微調整（12〜18vhで好みへ） */
+  top:1vh;/* ← ここで上下位置を微調整（12〜18vhで好みへ） */
   transform:translateX(-50%);
   z-index:10;
   pointer-events:none; /* クリックを邪魔しない */
 }
 
-
 .logo-image {
-	max-width: 800px;   /* 横幅の最大サイズを指定 */
-	  width: 80vw;        /* 画面幅の 80% まで広がる */
-	  height: auto;       /* ←これが大事！高さは自動で比率維持 */
+  max-width: 800px;   /* 最大幅（PC用） */
+  width: 70vw;        /* 画面幅の70%まで広げる */
+  height: auto;       /* アスペクト比維持 */
 }
 
 .content-wrapper{
@@ -42,7 +49,7 @@ body {
   border-radius: 20px;
   padding: 16px 20px;
   width: min(90vw, 820px);
-  margin: 0 auto 32px;      /* 上は 0（すでに body に余白あり）中央寄せ */
+  margin: 0 auto 50px;    
   box-shadow: 0 0 20px rgba(0,0,0,.2);
   max-height: 60vh;
   overflow-y: auto;
@@ -63,6 +70,8 @@ h2 {
 	text-align: right;
 	margin-right: 20px;
 	font-weight: bold;
+	color:orange;
+	
 }
 
 .filter-form {
@@ -75,21 +84,6 @@ h2 {
 	margin: 0 auto;
 }
 
-/*item-card {
-	padding: 10px;
-}*/
-
-/*ピンクの横の点線
-.item-card hr {
-	border: none;
-	border-top: 1px dashed #ffb6c1;
-	margin: 20px 0;
-}*/
-
-/*.item-card p {
-	margin: 5px 0;
-	font-size: 16px;
-}*/
 
 .item-card a {
 	color: #007bff;
@@ -122,7 +116,6 @@ h2 {
 }
 
 
-
 .success-message {
 	color: green;
 	font-weight: bold;
@@ -130,7 +123,7 @@ h2 {
 	margin-bottom: 10px;
 }
 
-/* ③ 編集・削除ボタンを右寄せに */
+/* 編集・削除ボタンを右寄せに */
 .item-card .action-buttons {
 	text-align: right;
 	font-size: 14px;
@@ -138,10 +131,18 @@ h2 {
 }
 
 
-
 .pagination {
-	text-align: center;
-	margin-top: 20px;
+  display: inline-flex; /* ←中央寄せしやすい */
+  margin-right:auto;
+  gap: 8px; /* ←ページ番号の間にちょっと隙間 */
+}
+
+/* ページネーション行：左右に振り分け */
+.pagination-area {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
 }
 
 .pagination a {
@@ -176,6 +177,100 @@ h2 {
 }
 
 .fes-memo-btn:hover {
+	background: #ff4081;
+	color: white;
+}
+
+/* 検索フォームの要素間隔 */
+.filter-form select,
+.filter-form label {
+	margin-right: 12px;
+}
+.filter-form button.search-btn,
+.filter-form .reset-btn {
+	margin-left: 6px;
+}
+
+.select{
+	background: #fff;
+	color: #000;
+	border: 2px solid #ff4081;
+	border-radius: 8px;
+	padding: 6px 14px;
+	text-decoration: none;
+	/*font-weight: bold;*/
+	font-size: 14px;
+	transition: 0.2s;
+}
+
+/*検索ボタン*/
+.search-btn {
+	background: #ffebf2;
+	color: #ff4081;
+	border: 2px solid #ff4081;
+	border-radius: 8px;
+	padding: 6px 14px;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 14px;
+	transition: 0.2s;
+}
+
+.search-btn:hover {
+	background: #ff4081;
+	color: #fff;
+}
+
+/* リセットボタン風リンク */
+.reset-btn {
+	background: #ffebf2;
+	color: #ff4081;
+	border: 2px solid #ff4081;
+	border-radius: 8px;
+	padding: 6px 14px;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 14px;
+	transition: 0.2s;
+}
+.reset-btn:hover {
+	background: #ff4081;
+	color: #fff;
+}
+
+
+
+/* 新規登録ボタン（右側） */
+.add-item-btn {
+	background: #ff4081;
+	color: #fff;
+	padding: 10px 16px;
+	border-radius: 10px;
+	text-decoration: none;
+	font-weight: bold;
+	transition: 0.3s;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+	margin-left: auto;  /* これで右に寄る */
+}
+.add-item-btn:hover {
+	background: #ec407a;
+}
+
+/* ログアウトボタン 左下に固定 */
+.logout-btn {
+	position: fixed;
+	bottom: 24px;
+	left: 24px;
+	background: white;
+	color: #ff4081;
+	border: 2px solid #ff4081;
+	padding: 12px 16px;
+	border-radius: 10px;
+	font-weight: bold;
+	text-decoration: none;
+	transition: all 0.3s;
+}
+.logout-btn:hover {
 	background: #ff4081;
 	color: white;
 }

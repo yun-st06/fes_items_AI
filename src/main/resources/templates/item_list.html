@@ -15,75 +15,71 @@
 		<img src="/images/logo.png" alt="ロゴ" class="logo-image">
 	</div>
 
-	
+
 	<div class="content-wrapper">
-	<h2>FES もちものリスト</h2>
-	<p class="hello-message" th:text="${'こんにちは！'+session.loginUser.name + 'さん！'}"></p>
+		<h2>FES もちものリスト</h2>
+		<p class="hello-message" th:text="${'こんにちは！'+session.loginUser.name + 'さん！'}"></p>
 
-	<p th:if="${message}" th:text="${message}" class="success-message"></p>
-
-
-	<form th:action="@{/item/list}" method="get" class="filter-form">
-		フェス名：
-		<select name="festivalId">
-			<option value="">---選択---</option>
-			<option th:each="festival: ${festivalList}" th:value="${festival.id}" th:text="${festival.fesName}"
-				th:selected="${festival.id==selectedFestivalId}"></option>
-		</select>
-		カテゴリ：
-		<select name="category">
-			<option value="">---選択---</option>
-			<option value="必須">必須</option>
-			<option value="衣類">衣類</option>
-			<option value="化粧品">化粧品</option>
-			<option value="食品">食品</option>
-		</select>
+		<p th:if="${message}" th:text="${message}" class="success-message"></p>
 
 
-		<button type="submit">検索</button>
-		<a th:href="@{/item/list}">リセット</a>
-	</form>
-	
-	<!--もちものリストの中の更にスクロールバー
-		<div class="item-list-wrapper">-->
+		<form th:action="@{/item/list}" method="get" class="filter-form">
+			<label>フェス名：</label>
+			<select name="festivalId" class="select">
+				<option value="">----------選択----------</option>
+				<option th:each="festival: ${festivalList}" th:value="${festival.id}" th:text="${festival.fesName}"
+					th:selected="${festival.id==selectedFestivalId}"></option>
+			</select>
+			<label>カテゴリ：</label>
+			<select name="category" class="select">
+				<option value="">-----選択-----</option>
+				<option value="必須">必須</option>
+				<option value="衣類">衣類</option>
+				<option value="化粧品">化粧品</option>
+				<option value="食品">食品</option>
+			</select>
 
-	<div class="item-list">
-		<div th:each="item,iterStat : ${itemList}" class="item-card">
-			
-			<p><strong>NO:</strong><span th:text="${iterStat.index+1}"></span></p>
-			<p><strong>フェス名:</strong><span th:text="${item.festivalName}"></span></p>
-			<p><strong>持ち物:</strong><span th:text="${item.itemName}"></span></p>
-			<p>
-				<p><strong>カテゴリ:</strong><span th:text="${item.category}"></span>
-				/ 数量:<span th:text="${item.quantity}"></span></spa>
-				
-			<p class="action-buttons">
-				<strong>操作</strong>
-				<a th:href="@{/item/edit/{id}(id=${item.id})}">編集</a>
-				<a th:href="@{'/item/delete/' +${item.id}}" onclick="return confirm('削除しますか？')">削除</a>
-			</p>
 
+			<button type="submit" class="search-btn">検索</button>
+			<a th:href="@{/item/list}" class="reset-btn">リセット</a>
+		</form>
+
+		<div class="item-list">
+			<div th:each="item,iterStat : ${itemList}" class="item-card">
+
+				<p><strong>NO : </strong><span th:text="${iterStat.index+1}"></span></p>
+				<p><strong>フェス名 : </strong><span th:text="${item.festivalName}"></span></p>
+				<p><strong>持ち物 : </strong><span th:text="${item.itemName}"></span></p>
+				<p><strong>カテゴリ : </strong><span th:text="${item.category}"></span>
+				<p><strong>数量 : </strong><span th:text="${item.quantity}"></span>
+
+				<p class="action-buttons">
+					<strong>操作 :</strong>
+					<a th:href="@{/item/edit/{id}(id=${item.id})}">編集</a>
+					<a th:href="@{'/item/delete/' +${item.id}}" onclick="return confirm('削除しますか？')">削除</a>
+				</p>
+
+			</div>
 		</div>
-	  </div>
-	
-	
-	
-	<!-- ページネーションリンク -->
-	<div class="pagination">
-		<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-			<a th:href="@{|/item/list?page=${pageNum}|}" th:text="${pageNum}"
-				th:classappend="${pageNum == currentPage} ? 'active' : ''">1</a>
-		</span>
+
+
+		<!-- ページネーションリンク -->
+		<div class="pagination-area">
+			<div class="pagination">
+				<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+					<a th:href="@{|/item/list?page=${pageNum}|}" th:text="${pageNum}"
+						th:classappend="${pageNum == currentPage} ? 'active' : ''">1</a>
+				</span>
+			</div>
+
+			<a th:href="@{/item/new}" class="add-item-btn">新規持ち物登録</a>
+		</div>
+
+
 	</div>
 
-	<br>
-
-	<a th:href="@{/item/new}">新規持ち物登録</a>
-	<a th:href="@{/logout}">ログアウト</a>
-	
 	<a href="/memo" class="fes-memo-btn">FESメモ</a>
-	</div>
-	
+	<a th:href="@{/logout}" class="logout-btn">ログアウト</a>
 </body>
 
 </html>
