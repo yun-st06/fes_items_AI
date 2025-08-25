@@ -13,7 +13,7 @@
 		<result property="category" column="category" />
 		<result property="quantity" column="quantity" />
 		<result property="createdAt" column="created_at" />
-		<result property="updatedAt" column="update_at" />
+		<result property="updatedAt" column="updated_at" />
 	</resultMap>
 
 

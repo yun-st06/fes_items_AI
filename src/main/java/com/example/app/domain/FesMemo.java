@@ -14,8 +14,9 @@ public class FesMemo {
 	    private String  memoText;
 	    private String imagePath;
 	    private LocalDateTime createdAt;
-	    private LocalDateTime updateAt;
+	    private LocalDateTime updatedAt;
 	    
+	 
 	    // 表示用
 	    private String festivalName;
 	    

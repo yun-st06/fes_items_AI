@@ -45,9 +45,14 @@ public class LoginController {
     	//メール＆パスワードでユーザー取得
         User loginUser = userService.findByEmailAndPassword(form.getEmail(), form.getPassword());
         if (loginUser != null) {
-            
+        	
+        	// ログ出力
+            System.out.println("ログイン成功: " + loginUser.getId() + ", " + loginUser.getName());
+        	
             session.setAttribute("loginUser", loginUser);
-            return "redirect:/item/list"; 
+            return "redirect:/item/list";
+            //return "redirect:/memo/list";
+            
         } else {
             model.addAttribute("loginError", "メールアドレスまたはパスワードが違います");
             return "login";
