@@ -1,8 +1,5 @@
 package com.example.app.controller;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +17,8 @@ import com.example.app.form.FesMemoForm;
 import com.example.app.service.FesMemoService;
 import com.example.app.service.FestivalService;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -32,8 +31,7 @@ public class FesMemoController {
 
 	private Integer loginUserId(HttpSession session) {
 		User u = (User) session.getAttribute("loginUser");
-		if (u == null) throw new IllegalStateException("not logged in");
-		return u.getId();
+	    return (u != null) ? u.getId() : null;
 
 	}
 
@@ -41,6 +39,7 @@ public class FesMemoController {
 	@GetMapping("/list")
 	public String list(Model model, HttpSession session) {
 		Integer uid = loginUserId(session);
+		if (uid == null) return "redirect:/login";   // ★ここでリダイレクト
 		model.addAttribute("memos", memoService.list(uid));
 		return "memo_list";
 
@@ -48,7 +47,9 @@ public class FesMemoController {
 
 	/* 登録画面 */
 	@GetMapping("/new")
-	public String newForm(Model model) {
+	public String newForm(Model model,HttpSession session) {
+		Integer uid = loginUserId(session);
+	    if (uid == null) return "redirect:/login"; // ★ 未ログインならログイン画面へ
 		model.addAttribute("memoForm", new FesMemoForm());
 		model.addAttribute("festivalList", festivalService.findAll());
 		return "memo_new";
@@ -80,7 +81,10 @@ public class FesMemoController {
 	/* 編集画面 */
 	@GetMapping("/edit/{id}")
 	public String editForm(@PathVariable Integer id, HttpSession session, Model model) {
-		FesMemo m = memoService.get(id, loginUserId(session));
+		Integer uid = loginUserId(session);
+		if (uid == null) return "redirect:/login";
+		
+	    FesMemo m = memoService.get(id, loginUserId(session));
 		FesMemoForm f = new FesMemoForm();
 		f.setId(m.getId());
 		f.setFestivalId(m.getFestivalId());
@@ -101,6 +105,8 @@ public class FesMemoController {
 			@RequestParam(name = "image", required = false) MultipartFile image,
 			HttpSession session,
 			Model model) throws Exception {
+		Integer uid = loginUserId(session);
+	    if (uid == null) return "redirect:/login"; 
 		if (br.hasErrors()) {
 			model.addAttribute("festivalList", festivalService.findAll());
 			return "memo_edit";
@@ -120,8 +126,11 @@ public class FesMemoController {
 	/* 削除 */
 	@PostMapping("/delete/{id}")
 	public String delete(@PathVariable Integer id, HttpSession session) throws Exception {
+		Integer uid = loginUserId(session);
+	    if (uid == null) return "redirect:/login";
+		
 		memoService.delete(id, loginUserId(session));
-		return "redirect:/mamo/list";
+		return "redirect:/memo/list";
 
 	}
 
