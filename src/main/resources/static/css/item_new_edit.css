@@ -172,3 +172,76 @@ button:hover {
   .field > select { max-width: 92vw; }
   .field > select[name="quantity"] { max-width: 9ch; }
 }
+
+/* ===========================
+   1) 編集 / 削除 をボタン風に
+   =========================== */
+.item-list .item-card .action-buttons{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.item-list .item-card .action-buttons strong{
+  margin-right: 2px;
+}
+
+/* 共通ボタンの見た目（小さめのピル） */
+.item-list .item-card .action-buttons a{
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1;
+  transition: .15s ease;
+}
+
+/* 先頭のリンク＝編集 */
+.item-list .item-card .action-buttons a:first-of-type{
+  background: #fff;
+  border: 1.5px solid #ff4e88;
+  color: #ff4e88;
+  box-shadow: 0 6px 12px rgba(255,78,136,.15);
+}
+.item-list .item-card .action-buttons a:first-of-type:hover{
+  background: #ff4e88;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* 最後のリンク＝削除 */
+.item-list .item-card .action-buttons a:last-of-type{
+  background: #fff;
+  border: 1.5px solid #e57373;
+  color: #e57373;
+}
+.item-list .item-card .action-buttons a:last-of-type:hover{
+  background: #ffeaea;
+  border-color: #e35757;
+}
+
+/* ===========================
+   2) 成功メッセージを枠付きで目立たせる
+   =========================== */
+.content-wrapper > .success-message{
+  margin: 10px auto 8px;
+  padding: 8px 14px;
+  border: 2px solid #39a36d;          /* くっきり枠 */
+  background: #e8f6ee;                /* うっすら緑背景 */
+  color: #1b7e4b;
+  border-radius: 12px;
+  font-weight: 700;
+  width: max-content;                  /* 文の長さに合わせる */
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+/* もし中央寄せしたいなら（h2の下で中央） */
+.content-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* h2やフォームの左右幅に影響しなければそのまま */
+}
+.content-wrapper h2{ margin-bottom: 8px; }
+
+
+

@@ -2,6 +2,9 @@ package com.example.app.controller;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +21,6 @@ import com.example.app.form.ItemForm;
 import com.example.app.service.FestivalService;
 import com.example.app.service.ItemService;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -30,30 +31,6 @@ public class ItemController {
 	private final ItemService itemService;
 	private final FestivalService festivalService;
 
-	/*持ち物一覧表示①
-		@GetMapping("/list")
-		public String listItems(@RequestParam(required = false) String category,
-				@RequestParam(required = false) Integer festivalId,
-				Model model, HttpSession session) {
-			User loginUser = (User) session.getAttribute("loginUser");
-	
-			if (loginUser == null) {
-				return "redirect:/login";
-			}
-	
-			model.addAttribute("loginUser", loginUser);
-			model.addAttribute("festivalList", festivalService.findAll());
-	
-			if ((category != null && !category.isEmpty()) ||
-					(festivalId != null)) {
-				model.addAttribute("itemList", itemService.search(category, festivalId));
-			} else {
-				model.addAttribute("itemList", itemService.findAll());
-	
-			}
-	
-			return "item_list";
-		}*/
 
 	//持ち物一覧②検索条件でページネーション付けたバージョン
 	@GetMapping("/list")

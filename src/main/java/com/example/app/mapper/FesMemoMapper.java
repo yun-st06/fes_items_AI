@@ -10,8 +10,7 @@ import com.example.app.domain.FesMemo;
 public interface FesMemoMapper {
 	     void insert(FesMemo m);
 	     List<FesMemo>findByUser(Integer userId);
-	     FesMemo findByIdAndUser(Integer id,Integer userId);
+	     FesMemo findByIdAndUser(@Param("id") Integer id,@Param("userId")Integer userId);
 	     void update(FesMemo m);
-	     void delete(FesMemo m);
 	     void delete(@Param("id") Integer id,@Param("userId") Integer userId);
 	   }

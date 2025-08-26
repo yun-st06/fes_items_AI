@@ -18,14 +18,16 @@
 	<sql id="BaseSelect">
 		SELECT m.*,f.fes_name AS festival_name
 		FROM user_memo m
-		LEFT JOIN festival f ON f.id=m.festival_id
+		LEFT
+		JOIN festival f ON f.id=m.festival_id
 	</sql>
 
 
 	<insert id="insert"
 		parameterType="com.example.app.domain.FesMemo" useGeneratedKeys="true"
 		keyProperty="id">
-		INSERT INTO user_memo(user_id,festival_id,memo_year,memo_text,image_path)
+		INSERT INTO
+		user_memo(user_id,festival_id,memo_year,memo_text,image_path)
 		VALUES(#{userId},#{festivalId},#{memoYear},#{memoText},#{imagePath})
 	</insert>
 
@@ -34,6 +36,13 @@
 		WHERE m.user_id=#{userId}
 		ORDER BY m.updated_at DESC
 	</select>
+
+	<select id="findByIdAndUser" resultMap="MemoMap">
+		<include refid="BaseSelect" />
+		WHERE m.id = #{id} AND m.user_id = #{userId}
+		LIMIT 1
+	</select>
+
 
 
 	<update id="update"
@@ -47,10 +56,8 @@
 	</update>
 
 	<delete id="delete">
-		DELETE FROM user_memo WHERE id =#{id} AND user_id=#{userId}
+		DELETE FROM user_memo WHERE id =#{id} AND
+		user_id=#{userId}
 	</delete>
-
-
-
 
 </mapper>
