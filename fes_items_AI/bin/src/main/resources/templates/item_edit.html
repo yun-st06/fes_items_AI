@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>持ち物編集</title>
+	<link rel="stylesheet" href="/css/item_new_edit.css">
+</head>
+
+<body>
+
+	<!-- ロゴ画像 -->
+	<div class="logo-container">
+		<img src="/images/logo.png" alt="FESTIVAL GO LIST" class="logo-image">
+	</div>
+
+	<!-- 中央フォーム -->
+	<div class="canvas-wrapper">
+		<div class="form-box">
+			<h2 class="form-title">持ち物編集</h2>
+
+			<form th:action="@{/item/edit/{id}}" method="post" th:object="${itemForm}" class="form-grid">
+				<input type="hidden" th:field="*{id}" />
+
+				<!-- 持ち物名 -->
+				<div class="row">
+					<label>持ち物名</label>
+					<div class="field">
+						<input type="text" th:field="*{itemName}" />
+						<p th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" class="error-message"></p>
+					</div>
+				</div>
+
+
+				<!-- カテゴリ -->
+				<div class="row">
+					<label>カテゴリ:</label>
+					<div class="field">
+						<p th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="error-message"></p>
+						<select th:field="*{category}">
+							<option value="">---選択---</option>
+							<option value="必須">必須</option>
+							<option value="衣類">衣類</option>
+							<option value="化粧品">化粧品</option>
+							<option value="食品">食品</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- フェス名 -->
+				<div class="row">
+					<label>フェス名：</label>
+					<div class="field">
+						<p th:if="${#fields.hasErrors('festivalId')}" th:errors="*{festivalId}" class="error-message">
+						</p>
+						<select th:field="*{festivalId}">
+							<option value="">---選択---</option>
+							<option th:each="festival : ${festivalList}" th:value="${festival.id}"
+								th:text="${festival.fesName}">
+							</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- 数量 -->
+				<div class="row">
+					<label>数量:</label>
+					<div class="field">
+						<p th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="error-message"></p>
+						<select th:field="*{quantity}">
+							<option th:each="i : ${#numbers.sequence(1,10)}" th:value="${i}" th:text="${i}"></option>
+						</select>
+					</div>
+				</div>
+
+				<!-- 更新ボタン -->
+				<div class="actions">
+					<button type="submit">更新</button>
+				</div>
+			</form>
+
+
+			<!-- 戻るリンク -->
+			<div class="link-right">
+				<a th:href="@{/item/list}">持ち物リストへ戻る</a>
+			</div>
+		</div>
+</body>
+
+</html>

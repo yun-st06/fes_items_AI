@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.FesMemoMapper">
+
+	<resultMap id="MemoMap" type="com.example.app.domain.FesMemo">
+		<id property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<result property="festivalId" column="festival_id" />
+		<result property="memoYear" column="memo_year" />
+		<result property="memoText" column="memo_text" />
+		<result property="imagePath" column="image_path" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+		<result property="festivalName" column="festival_name" />
+	</resultMap>
+
+	<sql id="BaseSelect">
+		SELECT m.*,f.fes_name AS festival_name
+		FROM user_memo m
+		LEFT
+		JOIN festival f ON f.id=m.festival_id
+	</sql>
+
+
+	<insert id="insert"
+		parameterType="com.example.app.domain.FesMemo" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO
+		user_memo(user_id,festival_id,memo_year,memo_text,image_path)
+		VALUES(#{userId},#{festivalId},#{memoYear},#{memoText},#{imagePath})
+	</insert>
+
+	<select id="findByUser" resultMap="MemoMap">
+		<include refid="BaseSelect" />
+		WHERE m.user_id=#{userId}
+		ORDER BY m.updated_at DESC
+	</select>
+
+	<select id="findByIdAndUser" resultMap="MemoMap">
+		<include refid="BaseSelect" />
+		WHERE m.id = #{id} AND m.user_id = #{userId}
+		LIMIT 1
+	</select>
+
+
+
+	<update id="update"
+		parameterType="com.example.app.domain.FesMemo">
+		UPDATE user_memo
+		SET festival_id =#{festivalId},
+		memo_year =#{memoYear},
+		memo_text =#{memoText},
+		image_path =#{imagePath}
+		WHERE id=#{id} AND user_id=#{userId}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM user_memo WHERE id =#{id} AND
+		user_id=#{userId}
+	</delete>
+
+</mapper>

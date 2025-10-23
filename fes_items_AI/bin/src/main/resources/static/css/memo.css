@@ -1,0 +1,488 @@
+@charset "UTF-8";
+
+/* もとの上余白量（ロゴ分の押し下げ） */
+:root{
+  --logo-offset: clamp(120px, 18vh, 220px);
+}
+
+/* ===== ベース ===== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  /* ロゴの分だけ本文を下げる → ロゴの上に白ボックスが重なる挙動に戻る */
+  padding-top: var(--logo-offset);
+
+  /* 背景：繰り返しを完全に止める */
+  background-image: url('../images/background.png');
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;     /* ← これがポイント */
+  /* （必要なら）スクロール時の縦ズレ防止に固定したい時は下をON
+  background-attachment: fixed;
+  */
+}
+
+/* ===== ロゴ（FESTIVAL GO LIST） ===== */
+/* もとの「白ボックスの下に潜る」挙動：z-indexは低く、固定表示 */
+.logo-container{
+  position: fixed;
+  top: 3vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;              /* ← 白ボックス(z-index:2)より下にする */
+  pointer-events: none;
+}
+.logo-image{
+  max-width: 800px;
+  height: auto;
+}
+
+/* ===== コンテンツ ===== */
+.canvas-wrapper{
+  display:flex; justify-content:center; align-items:flex-start;
+  width:100%;
+  padding: 18px 0 40px;
+  position: relative; z-index: 2;
+}
+
+.form-box{
+  position: relative; z-index: 2;   /* ← ロゴより前面 */
+  width: min(1120px, calc(100vw - 64px));
+  margin: 0 auto 48px;
+  padding: 24px 28px 24px;
+  border-radius: 26px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+  overflow: visible;
+}
+
+
+/* タイトル（FES MEMO） */
+.form-title{
+  margin: 6px auto 18px;
+  width: max-content;
+  padding: 8px 22px;
+  color: #fff;
+  font-size: 28px; font-weight: 900; letter-spacing: .06em;
+  background: linear-gradient(180deg, rgb(254, 109, 113), rgb(254, 109, 113));
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(255,78,136,.35);
+}
+
+/* ボタン類など（そのまま） */
+.header-btns{ display:flex; gap:12px; justify-content:flex-end; margin-bottom:12px; }
+.btn{ padding:10px 16px; border-radius:12px; text-decoration:none; display:inline-block; font-weight:700; transition:.15s ease; }
+.btn-primary{ background:#ff4e88; color:#fff; box-shadow:0 6px 14px rgba(255,78,136,.28); }
+.btn-plain{ background:#fff; border:1.5px solid #ddd; color:#333; }
+.btn-primary:hover{ background:#ff3e80; transform:translateY(-1px); }
+.btn-plain:hover{ background:#ff4e88; color:#fff; border-color: transparent; box-shadow:0 6px 14px rgba(255,78,136,.28); }
+
+/*.success-message {
+	 color: green;
+	 font-weight: bold; 
+	 text-align: center;
+	 margin-bottom: 10px; }*/
+
+/*緑枠を付けたデザイン*/	 	 
+.success-message {
+	   display: block;
+	   background: #e8f8f0;
+	   color: #2e7d32;
+	   border: 2px solid #2e7d32;
+	   border-radius: 10px;
+	   padding: 8px 16px;
+	   margin: 10px auto;
+	   font-weight: bold;
+	   text-align: center;
+	   max-width: 300px;
+	 }	 
+	 
+	 
+/* メモカード等（そのまま） */
+.memo-card{ background:#fff; border-radius:26px; box-shadow:0 14px 34px rgba(0,0,0,.12); padding:18px 20px; margin:18px 6px; position: relative; }
+.memo-head{ display:flex; gap:18px; align-items:flex-start; }
+.memo-body{ flex:1; }
+.memo-meta{ font-weight:900; font-size:24px; margin-bottom:8px; }
+.memo-text{ white-space: pre-wrap; margin:8px 0; line-height:1.6; }
+.memo-img img{ max-width:240px; border-radius:14px; display:block; }
+
+.memo-actions{ display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:10px; }
+.btn-danger{ background:#fff; border:1.5px solid #e57373; color:#e57373; }
+.btn-danger:hover{ background:#ffeaea; border-color:#e35757; }
+.btn-link{ background:#fff; border:1.5px solid #e57373; color:#e57373; }
+.btn-link:hover{ background:#ffeaea; border-color:#e35757; }
+
+@media (max-width: 560px){
+  .logo-image{ max-width: 80vw; }
+  .memo-head{ flex-direction: column-reverse; }
+  .memo-img img{ max-width: 100%; }
+}
+
+/* ====== 作成画面カード ====== */
+.new-panel{
+  width: min(560px, calc(100vw - 40px));
+  margin: 0 auto 48px;
+  padding: 24px 26px 18px;
+  background: rgba(255,255,255,0.96);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+}
+
+/* 見出し（ピンク） */
+.new-panel .form-title{
+  margin: 6px auto 18px;
+  text-align: center;
+  color: #ff4e88;
+  background: transparent;     /* 一覧と差別化：背景は透明に */
+  box-shadow: none;
+  font-size: 28px;
+}
+
+/* 行レイアウト */
+.form-grid .row{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.form-grid label{
+  min-width: 100px;
+  font-weight: 700;
+  color: #444;
+}
+
+.form-grid .field{ flex: 1; }
+
+/* 入力UI（セレクト・テキストエリア・ファイル） */
+.form-grid select,
+.form-grid textarea,
+.form-grid input[type="file"]{
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e6c5cf;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 16px;
+  outline: none;
+  box-shadow: inset 0 2px 3px rgba(0,0,0,0.04);
+}
+
+.form-grid textarea{ min-height: 140px; resize: vertical; }
+
+/* フォーカス時にピンクの縁 */
+.form-grid select:focus,
+.form-grid textarea:focus,
+.form-grid input[type="file"]:focus{
+  border-color: #ff6da5;
+  box-shadow: 0 0 0 3px rgba(255,109,165,.18);
+}
+
+/* エラー表示 */
+.error-message{
+  margin: 6px 0 0;
+  color: #e74c3c;
+  font-size: 13px;
+}
+
+/* 送信ボタン（ピンクのピル） */
+.btn-primary-pill{
+  appearance: none;
+  border: 0;
+  padding: 10px 28px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff6da5, #ff4e88);
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: .06em;
+  box-shadow: 0 8px 18px rgba(255,78,136,.35);
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease;
+}
+
+.btn-primary-pill:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+
+/* ボタン位置 */
+.actions{ display:flex; justify-content:center; margin-top: 6px; }
+
+/* 右上リンク */
+.new-panel .link-right{ text-align:right; margin: 10px 4px 4px; }
+.new-panel .link-right a{ color:#666; text-decoration: underline; }
+.new-panel .link-right a:hover{ color:#333; }
+
+/* モバイル調整 */
+@media (max-width: 560px){
+  .form-grid .row{ flex-direction: column; align-items: stretch; }
+  .form-grid label{ min-width: 0; }
+}
+
+
+/* ===== FES MEMO作成/編集を item_new_edit の見た目に合わせる ===== */
+
+/* ラベル位置と行レイアウト（持ち物登録準拠） */
+.form-grid .row{
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: center;
+  column-gap: 18px;
+}
+.form-grid label{
+  min-width: 0;
+  text-align: right;
+  font-weight: 700;
+  color: #333;
+}
+.form-grid .field{ display:flex; flex-direction:column; align-items:flex-start; }
+
+/* ① セレクト / テキストエリア：淡ピンク枠→黒系枠へ（＝持ち物登録と同じ） */
+.form-grid select,
+.form-grid textarea{
+  width: 100%;
+  max-width: 520px;
+  padding: 12px;
+  border: 1.5px solid #aaa !important;   /* ← 黒系の枠 */
+  border-radius: 10px;
+  background: #fff;
+  font-size: 16px;
+  outline: none;
+  box-shadow: none !important;
+}
+
+/* ② ファイル入力：ピンクの枠は無し（標準の薄グレーに） */
+.form-grid input[type="file"]{
+  width: 100%;
+  max-width: 520px;
+  padding: 8px 10px;
+  border: 1.5px solid #aaa !important;   /* または border: none; でもOK */
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: none !important;
+}
+
+/* フォーカス時：ピンク強調は無し（控えめに） */
+.form-grid select:focus,
+.form-grid textarea:focus,
+.form-grid input[type="file"]:focus{
+  border-color: #666 !important;
+  outline: none;
+  box-shadow: none !important;
+}
+
+/* ④ セレクトの矢印デザインを持ち物登録に合わせる */
+.form-grid select{
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #666 50%),
+    linear-gradient(135deg, #666 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 36px;  /* 矢印ぶんの余白 */
+}
+
+/* ===== FES MEMO 作成/編集：持ち物登録の見た目に完全合わせ ===== */
+
+/* ① セレクト右側の ↓ を消す（各ブラウザ対応） */
+.new-panel .form-grid select{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: none !important; /* 以前のカスタム矢印も消す */
+  padding-right: 12px;               /* 右側の余白だけ残す */
+}
+.new-panel .form-grid select::-ms-expand{ display:none; } /* 旧Edge/IE対策 */
+
+/* セレクト/テキストエリア/ファイル：黒枠で統一（ピンク装飾を無効化） */
+.new-panel .form-grid select,
+.new-panel .form-grid textarea,
+.new-panel .form-grid input[type="file"]{
+  border: 1.5px solid #aaa !important;
+  box-shadow: none !important;
+  background: #fff;
+}
+
+/* フォーカス時も派手に光らせない */
+.new-panel .form-grid select:focus,
+.new-panel .form-grid textarea:focus,
+.new-panel .form-grid input[type="file"]:focus{
+  border-color: #666 !important;
+  outline: none;
+  box-shadow: none !important;
+}
+
+/* ② 作成ボタンをピンク（持ち物登録と同じ） */
+.new-panel .actions{ text-align:center; margin-top: 10px; }
+.new-panel .actions button{
+  padding: 11px 24px;
+  background: #ff4081;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+.new-panel .actions button:hover{ background: #ec407a; }
+
+/* （もし .btn-primary-pill クラスを使っている場合も同色にしておく） */
+.new-panel .actions .btn-primary-pill{ background:#ff4081; border-radius:12px; }
+.new-panel .actions .btn-primary-pill:hover{ background:#ec407a; }
+
+/* ③ 「一覧へ戻る」を青に */
+.new-panel .link-right a{
+  color: #3f51b5 !important;
+  text-decoration: underline;
+}
+.new-panel .link-right a:hover{ color:#2c3ea1; }
+
+
+
+/* 数量みたいな狭いセレクトを想定（必要なら） */
+.form-grid select.narrow{ min-width: 120px; max-width: 150px; }
+
+/* ③ 作成ボタン：持ち物登録と同じピンクボタン */
+.actions{ text-align:center; margin-top: 10px; }
+.actions .btn-primary-pill{
+  padding: 11px 24px;
+  background: #ff4081;      /* 同色 */
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+.actions .btn-primary-pill:hover{ background: #ec407a; }
+
+/* スマホ調整（持ち物登録に寄せる） */
+@media (max-width: 560px){
+  .form-grid .row{ grid-template-columns: 1fr; }
+  .form-grid label{ text-align: left; }
+  .form-grid select,
+  .form-grid textarea,
+  .form-grid input[type="file"]{ max-width: 92vw; }
+}
+
+/* ===== 編集ページ専用（古い白いフォームを隠す＆中央寄せ） ===== */
+.canvas-wrapper.is-edit{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - var(--logo-offset));
+}
+
+/* 下に残ってる旧フォーム（form-box）を編集ページだけ消す */
+.canvas-wrapper.is-edit .form-box{
+  display: none !important;
+}
+
+/* 念のため：編集カードは中央に */
+.canvas-wrapper.is-edit .new-panel{
+  margin: 0 auto 48px;
+}
+
+/* === FES MEMO の 編集/削除ボタンを統一 === */
+.memo-actions .btn-link,
+.memo-actions .btn-danger{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;        /* 同じ幅感 */
+  padding: 8px 14px;      /* 同じ高さ感 */
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+/* 編集：ほのかなピンク背景（デフォルト） */
+.memo-actions .btn-link{
+  background: #ffe8f1;                 /* 薄いピンク */
+  border: 1.5px solid #ff88ad;         /* ピンク枠 */
+  color: #e4578a;
+}
+.memo-actions .btn-link:hover{
+  background: #ffbad2;
+  border-color: #ff6aa7;
+  color: #fff;
+}
+
+/* 削除：白地＋赤系枠（既存のトーンを維持しつつ統一サイズ） */
+.memo-actions .btn-danger{
+  background: #fff;
+  border: 1.5px solid #e57373;
+  color: #e57373;
+}
+.memo-actions .btn-danger:hover{
+  background: #ffeaea;
+  border-color: #e35757;
+}
+
+/* === FES MEMO：編集・削除ボタンを item_list.css と統一 === */
+.memo-actions { gap: 8px; }
+
+.memo-actions .btn-link,
+.memo-actions .btn-danger{
+  display: inline-block;
+  padding: 6px 14px;          /* item_list と同じ */
+  margin-left: 6px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.2s;
+  line-height: 1;
+  min-width: 68px;            /* 幅感を揃える（任意） */
+  text-align: center;
+}
+
+/* 編集ボタン（薄ピンク→ホバーで濃ピンク） */
+.memo-actions .btn-link{
+  background: #ffebf2;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+.memo-actions .btn-link:hover{
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* 削除ボタン（白地＋赤枠→ホバーで赤） */
+.memo-actions .btn-danger{
+  background: #fff;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+.memo-actions .btn-danger:hover{
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* ログアウトボタン 左下に固定 */
+.logout-btn {
+	position: fixed;
+	bottom: 24px;
+	left: 24px;
+	background: white;
+	color: #ff4081;
+	border: 2px solid #ff4081;
+	padding: 12px 16px;
+	border-radius: 10px;
+	font-weight: bold;
+	text-decoration: none;
+	transition: all 0.3s;
+	z-index: 9999;     /* ← 追加 */
+    pointer-events: auto; 
+  }
+  
+.logout-btn:hover {
+	background: #ff4081;
+	color: white;
+}
