@@ -14,7 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 	  @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
 	    Path p = Paths.get(uploadDir).toAbsolutePath().normalize();
-	    registry.addResourceHandler("/uploads/**").addResourceLocations(p.toUri().toString());
+	    registry.addResourceHandler("/uploads/**")
+	             .addResourceLocations(p.toUri().toString(),"file:uploads/");
 	  }
 	}
 
