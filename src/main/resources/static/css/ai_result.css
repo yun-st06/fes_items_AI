@@ -1,0 +1,124 @@
+body {
+  font-family: "Segoe UI", "Hiragino Sans", "Meiryo", sans-serif;
+  background: #fafafa;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  	background-color: #fff5f5;
+  	color: #333;
+  	padding: calc(var(--logo-offset) + 40px) 20px 0; /* ← topだけじゃなく右に20pxも */
+    /* 既存の background 等はそのまま */
+  	background-image: url('/images/background.png');
+  	background-size: cover;
+  	background-position: top center;
+  	background-repeat: no-repeat;
+  	min-height: 100vh;
+  	font-family: "Helvetica", "Arial", sans-serif;
+  }
+
+
+.wrap {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  margin-bottom: 12px;
+}
+
+.error {
+  margin: 12px 0;
+  padding: 10px 12px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+}
+
+
+.list {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  background: #fcfcfc;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.name {
+  flex: 1;
+}
+
+.qty {
+  width: 80px;
+  text-align: center;
+}
+
+fieldset {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+legend {
+  font-weight: bold;
+}
+
+.festival-info {
+  margin-left: 16px;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 16px;
+}
+
+button {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+a {
+  text-decoration: none;
+  color: #2563eb;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+details {
+  margin-top: 12px;
+}
+
+.raw-text {
+  white-space: pre-wrap;
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  padding: 8px;
+  border-radius: 6px;
+}

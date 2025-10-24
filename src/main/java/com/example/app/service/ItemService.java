@@ -17,15 +17,17 @@ public interface ItemService {
 
 	int delete(long id);
 
-	//ページネーション用
+	//ページネーション
 	int countItems();
-
-	List<Item> findItemByPage(int offset, int Limit);
+    List<Item> findItemByPage(int offset, int Limit);
+	List<Item> searchByPage(String category, Integer festivalId, int offset, int limit);
+    int countSearchItems(String category, Integer festivalId);
+		
+	//既存	
+	void bulkInsert(List<String> itemNames, List<Integer> qty);
 	
-	// 検索 + ページネーション用
-		List<Item> searchByPage(String category, Integer festivalId, int offset, int limit);
-
-		int countSearchItems(String category, Integer festivalId);
-	
+	//ユーザ/フェス/カテゴリを指定して一括登録
+    void bulkInsertWithContext(List<String> itemNames, List<Integer> qty,
+                               Integer userId, Integer festivalId, String category);
 
 }
