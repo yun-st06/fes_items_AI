@@ -22,36 +22,37 @@
 
 		<p th:if="${message}" th:text="${message}" class="success-message"></p>
 		
+		<form th:action="@{/item/list}" method="get" class="filter-form" id="searchForm">
+  <!-- 検索したら必ず1ページ目に戻す -->
+  <input type="hidden" name="page" value="1"/>
+
+  <label>フェス名：</label>
+  <select name="festivalId" id="festivalId" class="select">
+    <option value="">----------選択----------</option>
+    <option th:each="festival : ${festivalList}"
+            th:value="${festival.id}"
+            th:text="${festival.fesName}"
+            th:selected="${festivalId} != null and festival.id == festivalId">
+    </option>
+  </select>
+
+  <label>カテゴリ：</label>
+  <select name="category" id="category" class="select">
+    <option value="">-----選択-----</option>
+    <option value="必須"   th:selected="${category} == '必須'">必須</option>
+    <option value="貴重品" th:selected="${category} == '貴重品'">貴重品</option>
+    <option value="化粧品" th:selected="${category} == '化粧品'">化粧品</option>
+    <option value="日用品" th:selected="${category} == '日用品'">日用品</option>
+    <option value="食品"   th:selected="${category} == '食品'">食品</option>
+    <option value="衣類"   th:selected="${category} == '衣類'">衣類</option>
+  </select>
+
+  <button type="submit" class="search-btn">検索</button>
+  <a th:href="@{/item/list}" class="reset-btn">リセット</a>
+</form>
+
         
-     <form th:action="@{/item/list}" method="get" class="filter-form" id="searchForm">
-		  <!-- 検索したら必ず1ページ目に戻す -->
-		  <input type="hidden" name="page" value="1" />
-
-		  <label>フェス名：</label>
-		  <select name="festivalId" id="festivalId" class="select">
-		    <option value="">----------選択----------</option>
-		    <option th:each="festival : ${festivalList}"
-		            th:value="${festival.id}"
-		            th:text="${festival.fesName}"
-		            th:selected="${festivalId} != null and festival.id == festivalId">
-		    </option>
-		  </select>
-
-		  <label>カテゴリ：</label>
-		  <select name="category" id="category" class="select">
-		    <option value="">-----選択-----</option>
-		    <option value="必須"   th:selected="${category} == '必須'">必須</option>
-		    <option value="貴重品" th:selected="${category} == '貴重品'">貴重品</option>
-		    <option value="化粧品" th:selected="${category} == '化粧品'">化粧品</option>
-		    <option value="日用品" th:selected="${category} == '日用品'">日用品</option>
-		    <option value="食品"   th:selected="${category} == '食品'">食品</option>
-		    <option value="衣類"   th:selected="${category} == '衣類'">衣類</option>
-		  </select>
-
-		  <button type="submit" class="search-btn">検索</button>
-		  <a th:href="@{/item/list}" class="reset-btn">リセット</a>
-		</form>
-
+     
 
 
 		<!-- 天気カード -->
@@ -98,11 +99,12 @@
 		<div class="pagination-area">
 			<div class="pagination">
 				<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-					
 					<a th:href="@{/item/list(page=${pageNum}, festivalId=${festivalId}, category=${category})}"
-					   th:text="${pageNum}"
-					   th:classappend="${pageNum == currentPage} ? 'active' : ''">
-					</a>
+                      th:text="${pageNum}"
+                      th:classappend="${pageNum == currentPage} ? 'active' : ''">
+                   </a>
+
+					
 
 				</span>
 			   </div>
