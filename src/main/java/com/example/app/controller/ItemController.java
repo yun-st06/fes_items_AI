@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.app.domain.Festival;
 import com.example.app.domain.Item;
 import com.example.app.domain.User;
 import com.example.app.form.ItemForm;
 import com.example.app.service.FestivalService;
 import com.example.app.service.ItemService;
+import com.example.app.service.WeatherService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,16 +32,24 @@ public class ItemController {
 
 	private final ItemService itemService;
 	private final FestivalService festivalService;
+	private final WeatherService weatherService;
 
-
+    
+	
+	
 	//持ち物一覧②検索条件でページネーション付けたバージョン
 	@GetMapping("/list")
+	
 	public String listItems(
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false) Integer festivalId,
 			@RequestParam(defaultValue = "1") int page,
 			Model model,
 			HttpSession session) {
+		
+		
+		System.out.println("DEBUG ★ festivalId = " + festivalId);
+	    System.out.println("DEBUG ★ category = " + category);
 
 		User loginUser = (User) session.getAttribute("loginUser");
 		if (loginUser == null) {
@@ -73,7 +83,28 @@ public class ItemController {
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("category", category); // フォーム再表示用
 		model.addAttribute("festivalId", festivalId); // フォーム再表示用
+		model.addAttribute("selectedFestivalId", festivalId);
 
+		 if (festivalId != null) {
+		        Festival fes = festivalService.findById(festivalId.longValue());  
+		        if (fes != null && fes.getLatitude() != null && fes.getLongitude() != null) {
+		            WeatherService.WeatherResult wr =
+		                    weatherService.getCurrentByLatLon(fes.getLatitude(), fes.getLongitude()); 
+		            if (wr.hasInfo()) {
+		                model.addAttribute("weather", wr.info);
+		                String loc = fes.getLocation();
+		                String place = (loc != null && !loc.trim().isEmpty()) ? loc : fes.getFesName();
+		                model.addAttribute("weatherPlace", place);
+		            }
+		            if (wr.hasError()) {
+		                model.addAttribute("weatherError", wr.error);
+		            }
+		        } else {
+		            model.addAttribute("weatherError", "このフェスの開催地座標が未登録です（latitude/longitude を設定してください）。");
+		        }
+		    }
+
+	
 		return "item_list";
 	}
 

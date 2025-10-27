@@ -21,30 +21,59 @@
 		<p class="hello-message" th:text="${'こんにちは！'+session.loginUser.name + 'さん！'}"></p>
 
 		<p th:if="${message}" th:text="${message}" class="success-message"></p>
+		
+        
+     <form th:action="@{/item/list}" method="get" class="filter-form" id="searchForm">
+		  <!-- 検索したら必ず1ページ目に戻す -->
+		  <input type="hidden" name="page" value="1" />
 
+		  <label>フェス名：</label>
+		  <select name="festivalId" id="festivalId" class="select">
+		    <option value="">----------選択----------</option>
+		    <option th:each="festival : ${festivalList}"
+		            th:value="${festival.id}"
+		            th:text="${festival.fesName}"
+		            th:selected="${festivalId} != null and festival.id == festivalId">
+		    </option>
+		  </select>
 
-		<form th:action="@{/item/list}" method="get" class="filter-form">
-			<label>フェス名：</label>
-			<select name="festivalId" class="select">
-				<option value="">----------選択----------</option>
-				<option th:each="festival: ${festivalList}" th:value="${festival.id}" th:text="${festival.fesName}"
-					th:selected="${festival.id==selectedFestivalId}"></option>
-			</select>
-			<label>カテゴリ：</label>
-			<select name="category" class="select">
-				<option value="">-----選択-----</option>
-				<option value="必須">必須</option>
-				<option value="貴重品">貴重品</option>
-				<option value="化粧品">化粧品</option>
-				<option value="日用品">日用品</option>
-				<option value="食品">食品</option>
-				<option value="衣類">衣類</option>
-			</select>
+		  <label>カテゴリ：</label>
+		  <select name="category" id="category" class="select">
+		    <option value="">-----選択-----</option>
+		    <option value="必須"   th:selected="${category} == '必須'">必須</option>
+		    <option value="貴重品" th:selected="${category} == '貴重品'">貴重品</option>
+		    <option value="化粧品" th:selected="${category} == '化粧品'">化粧品</option>
+		    <option value="日用品" th:selected="${category} == '日用品'">日用品</option>
+		    <option value="食品"   th:selected="${category} == '食品'">食品</option>
+		    <option value="衣類"   th:selected="${category} == '衣類'">衣類</option>
+		  </select>
 
-
-			<button type="submit" class="search-btn">検索</button>
-			<a th:href="@{/item/list}" class="reset-btn">リセット</a>
+		  <button type="submit" class="search-btn">検索</button>
+		  <a th:href="@{/item/list}" class="reset-btn">リセット</a>
 		</form>
+
+
+
+		<!-- 天気カード -->
+		<p th:if="${weatherError}" th:text="${weatherError}" class="error-message"></p>
+
+		<div class="weather-card" th:if="${weather}">
+		  <div class="weather-card__header">
+		    <img th:src="@{|https://openweathermap.org/img/wn/${weather.icon}@2x.png|}"
+		         alt="天気アイコン" class="weather-card__icon"/>
+		    <div>
+		      <strong th:text="${weatherPlace}">開催地</strong>
+		      <div th:text="${weather.description}">くもり</div>
+		    </div>
+		  </div>
+		  <div class="weather-card__grid">
+		    <div><span>気温</span><strong th:text="${#numbers.formatDecimal(weather.temp, 1, 1)}">22.5</strong>℃</div>
+		    <div><span>体感</span><strong th:text="${#numbers.formatDecimal(weather.feelsLike, 1, 1)}">21.8</strong>℃</div>
+		    <div><span>湿度</span><strong th:text="${weather.humidity}">65</strong>%</div>
+		    <div><span>風速</span><strong th:text="${#numbers.formatDecimal(weather.windSpeed, 1, 1)}">3.2</strong>m/s</div>
+		  </div>
+		</div>
+		
 
 		<div class="item-list">
 			<div th:each="item,iterStat : ${itemList}" class="item-card">
@@ -69,11 +98,14 @@
 		<div class="pagination-area">
 			<div class="pagination">
 				<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-					<a th:href="@{|/item/list?page=${pageNum}|}" th:text="${pageNum}"
-						th:classappend="${pageNum == currentPage} ? 'active' : ''">1</a>
-				</span>
-			</div>
+					
+					<a th:href="@{/item/list(page=${pageNum}, festivalId=${festivalId}, category=${category})}"
+					   th:text="${pageNum}"
+					   th:classappend="${pageNum == currentPage} ? 'active' : ''">
+					</a>
 
+				</span>
+			   </div>
 			<a th:href="@{/item/new}" class="add-item-btn">新規持ち物登録</a>
 		</div>
 

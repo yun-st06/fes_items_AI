@@ -50,7 +50,8 @@ public class LoginController {
             System.out.println("ログイン成功: " + loginUser.getId() + ", " + loginUser.getName());
         	
             session.setAttribute("loginUser", loginUser);
-            return "redirect:/item/list";
+            //return "redirect:/item/list";
+            return "redirect:/ai/form";
             //return "redirect:/memo/list";
             
         } else {
