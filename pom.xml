@@ -75,11 +75,11 @@
 			<version>3.0.5</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-          <groupId>com.openai</groupId>
-          <artifactId>openai-java</artifactId>
-          <version>4.4.0</version>
-       </dependency>	
+	<dependency>
+       <groupId>com.theokanning.openai-gpt3-java</groupId>
+         <artifactId>service</artifactId>
+         <version>0.17.0</version>
+    </dependency>
 	</dependencies>
 
 	<build>
