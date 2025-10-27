@@ -8,4 +8,6 @@ public class Festival{
 	    private String fesName;
 	    private Integer year;
 	    private String location;
+	    private Double latitude;
+	    private Double longitude;
 }

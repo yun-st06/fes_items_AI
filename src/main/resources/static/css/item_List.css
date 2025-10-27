@@ -96,6 +96,21 @@ h2 {
 }
 
 
+.weather-card {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  max-width: 520px;
+}
+.weather-card__header { display: flex; gap: 12px; align-items: center;
+  border-bottom: 1px dashed #eee; padding-bottom: 8px; margin-bottom: 12px; }
+.weather-card__icon { width: 56px; height: 56px; }
+.weather-card__grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; text-align: center; }
+.error-message { color:#b91c1c; margin-top:8px; }
+
+
 /* 持ち物1件分の表示ブロック */
 .item-card {
 	padding: 5px 12px;
