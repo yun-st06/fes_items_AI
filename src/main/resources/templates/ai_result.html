@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>AI提案結果</title>
 
-  <!-- CSSを外部ファイル化 -->
   <link rel="stylesheet" th:href="@{/css/ai_result.css}" />
 </head>
 <body>
@@ -55,7 +54,7 @@
     <div class="actions">
       <button type="submit">🧳 リスト登録</button>
       <a th:href="@{/ai/form}">条件を修正する</a>
-      <a th:href="@{/item/list}">持ち物一覧へ</a>
+	  <a th:href="@{/item/list(festivalId=${festivalId}, page=1)}">持ち物一覧へ</a>
     </div>
   </form>
 </div>

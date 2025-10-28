@@ -30,4 +30,8 @@ public interface ItemService {
     void bulkInsertWithContext(List<String> itemNames, List<Integer> qty,
                                Integer userId, Integer festivalId, String category);
 
+
+    //AI自動提案用
+    List<Item> suggest(Integer festivalId, Integer days, String lodging, String gender);
+
 }

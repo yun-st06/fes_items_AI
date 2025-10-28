@@ -21,9 +21,20 @@ public interface ItemMapper{
         
         //ページネーション用
         int countItems();
-        List<Item> findItemByPage(@Param("offset")int offset,@Param("limit") int Limit);
+        List<Item> findItemByPage(@Param("offset")int offset,@Param("limit") int limit);
         
         //ページネーション検索
         List<Item> searchByPage(String category, Integer festivalId, int offset, int limit);
     	int countSearchItems(String category, Integer festivalId);
-   }
+   
+    	// AI自動提案用
+    	List<Item> selectSuggestedItems(
+    	        @Param("festivalId") Integer festivalId,
+    	        @Param("days") Integer days,
+    	        @Param("lodging") String lodging,
+    	        @Param("gender") String gender
+    	);
+
+
+
+}

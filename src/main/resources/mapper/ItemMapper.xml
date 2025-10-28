@@ -93,14 +93,14 @@
 		=#{id}
 	</delete>
 
-	<!-- 🎯 ページネーション：全件 -->
+	<!-- ページネーション：全件 -->
 	<select id="countItems" resultType="int">
 		SELECT COUNT(*) FROM item
 	</select>
 
 
 	<select id="findItemByPage" resultMap="ItemResultMap">
-		SELECT 
+		SELECT
 		i.id,
 		i.user_id,
 		i.festival_id,
@@ -110,13 +110,14 @@
 		i.created_at,
 		i.updated_at,
 		f.fes_name AS festival_name
-	 FROM item i
-	 LEFT JOIN festival f ON i.festival_id =f.id
-	 ORDER BY i.id
-	 LIMIT #{limit} OFFSET #{offset}
+		FROM item i
+		LEFT JOIN festival
+		f ON i.festival_id =f.id
+		ORDER BY i.id
+		LIMIT #{limit} OFFSET #{offset}
 	</select>
 
-	<!-- 🔍 ページネーション：検索つき -->
+	<!-- ページネーション：検索つき -->
 	<select id="countSearchItems" resultType="int">
 		SELECT COUNT(*) FROM
 		item
@@ -125,19 +126,45 @@
 		(#{festivalId} IS NULL OR festival_id = #{festivalId})
 	</select>
 
-  <select id="searchByPage" resultType="com.example.app.domain.Item">
-	SELECT 
-		i.id, i.user_id, i.festival_id, i.item_name, i.category, i.quantity,
+	<select id="searchByPage"
+		resultType="com.example.app.domain.Item">
+		SELECT
+		i.id, i.user_id, i.festival_id, i.item_name,
+		i.category, i.quantity,
 		i.created_at, i.updated_at,
-		f.fes_name AS festival_name
-	FROM 
+		f.fes_name AS
+		festival_name
+		FROM
 		item i
 		LEFT JOIN festival f ON i.festival_id = f.id
-	WHERE 
+		WHERE
 		(#{category} IS NULL OR i.category = #{category})
-		AND (#{festivalId} IS NULL OR i.festival_id = #{festivalId})
-	ORDER BY i.id
-	LIMIT #{limit} OFFSET #{offset}
-   </select>
+		AND
+		(#{festivalId} IS NULL OR
+		i.festival_id = #{festivalId})
+		ORDER BY i.id
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<!-- 条件に一致した item だけ返す“厳格”版 -->
+	<select id="selectSuggestedItems" resultMap="ItemResultMap">
+  <![CDATA[
+  SELECT DISTINCT
+    i.id, i.user_id, i.festival_id, i.item_name, i.category, i.quantity,
+    i.created_at, i.updated_at,
+    f.fes_name AS festival_name
+  FROM item i
+  JOIN item_condition c ON c.item_id = i.id           -- ★ LEFT → JOIN（必須）
+  LEFT JOIN festival f ON i.festival_id = f.id
+  WHERE
+    (c.festival_id IS NULL OR c.festival_id = #{festivalId})
+    AND (c.min_days   IS NULL OR #{days} >= c.min_days)
+    AND (c.max_days   IS NULL OR #{days} <= c.max_days)
+    AND (c.lodging    IS NULL OR c.lodging = #{lodging})
+    AND (c.gender     IS NULL OR c.gender = 'any' OR c.gender = #{gender})
+  ORDER BY i.category, i.item_name
+  ]]>
+	</select>
+
 
 </mapper>

@@ -35,79 +35,73 @@ public class ItemController {
 	private final WeatherService weatherService;
 
     
-	
-	
-	//持ち物一覧②検索条件でページネーション付けたバージョン
+	// 持ち物一覧（検索 + ページネーション）
 	@GetMapping("/list")
-	
 	public String listItems(
-			@RequestParam(required = false) String category,
-			@RequestParam(required = false) Integer festivalId,
-			@RequestParam(defaultValue = "1") int page,
-			Model model,
-			HttpSession session) {
-		
-		
-		System.out.println("DEBUG ★ festivalId = " + festivalId);
-	    System.out.println("DEBUG ★ category = " + category);
+	        @RequestParam(required = false) String category,
+	        @RequestParam(required = false) Integer festivalId,
+	        @RequestParam(defaultValue = "1") int page,
+	        Model model,
+	        HttpSession session) {
 
-		User loginUser = (User) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+	    // 認可
+	    User loginUser = (User) session.getAttribute("loginUser");
+	    if (loginUser == null) return "redirect:/login";
 
-		// 共通情報
-		model.addAttribute("loginUser", loginUser);
-		model.addAttribute("festivalList", festivalService.findAll());
+	    // ① 入力正規化：空文字は null にする（Thymeleaf がURLに付けないように）
+	    if (category != null && category.isBlank()) category = null;
 
-		int limit = 10;
-		int offset = (page - 1) * limit;
+	    // 共通表示
+	    model.addAttribute("loginUser", loginUser);
+	    model.addAttribute("festivalList", festivalService.findAll());
 
-		List<Item> itemList;
-		int totalItems;
+	    // ② ページング計算
+	    final int limit = 10;
+	    final int offset = (Math.max(page, 1) - 1) * limit;
 
-		if ((category != null && !category.isEmpty()) || (festivalId != null)) {
-			// 絞り込みあり
-			itemList = itemService.searchByPage(category, festivalId, offset, limit);
-			totalItems = itemService.countSearchItems(category, festivalId);
-		} else {
-			// 絞り込みなし
-			itemList = itemService.findItemByPage(offset, limit);
-			totalItems = itemService.countItems();
-		}
+	    // ③ データ取得（フィルタ有無で分岐）
+	    final List<Item> itemList;
+	    final int totalItems;
+	    if (category != null || festivalId != null) {
+	        itemList   = itemService.searchByPage(category, festivalId, offset, limit);
+	        totalItems = itemService.countSearchItems(category, festivalId);
+	    } else {
+	        itemList   = itemService.findItemByPage(offset, limit);
+	        totalItems = itemService.countItems();
+	    }
 
-		int totalPages = (int) Math.ceil((double) totalItems / limit);
+	    final int totalPages = (int) Math.ceil((double) totalItems / limit);
 
-		model.addAttribute("itemList", itemList);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("category", category); // フォーム再表示用
-		model.addAttribute("festivalId", festivalId); // フォーム再表示用
-		model.addAttribute("selectedFestivalId", festivalId);
+	    // ④ 画面へ
+	    model.addAttribute("itemList", itemList);
+	    model.addAttribute("currentPage", Math.max(page, 1));
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("category", category);        // ← 空文字→null 済み
+	    model.addAttribute("festivalId", festivalId);    // ← null 可
+	    model.addAttribute("selectedFestivalId", festivalId);
 
-		 if (festivalId != null) {
-		        Festival fes = festivalService.findById(festivalId.longValue());  
-		        if (fes != null && fes.getLatitude() != null && fes.getLongitude() != null) {
-		            WeatherService.WeatherResult wr =
-		                    weatherService.getCurrentByLatLon(fes.getLatitude(), fes.getLongitude()); 
-		            if (wr.hasInfo()) {
-		                model.addAttribute("weather", wr.info);
-		                String loc = fes.getLocation();
-		                String place = (loc != null && !loc.trim().isEmpty()) ? loc : fes.getFesName();
-		                model.addAttribute("weatherPlace", place);
-		            }
-		            if (wr.hasError()) {
-		                model.addAttribute("weatherError", wr.error);
-		            }
-		        } else {
-		            model.addAttribute("weatherError", "このフェスの開催地座標が未登録です（latitude/longitude を設定してください）。");
-		        }
-		    }
+	    // 天気カード（任意）
+	    if (festivalId != null) {
+	        Festival fes = festivalService.findById(festivalId.longValue());
+	        if (fes != null && fes.getLatitude() != null && fes.getLongitude() != null) {
+	            WeatherService.WeatherResult wr =
+	                    weatherService.getCurrentByLatLon(fes.getLatitude(), fes.getLongitude());
+	            if (wr.hasInfo()) {
+	                model.addAttribute("weather", wr.info);
+	                String loc = fes.getLocation();
+	                model.addAttribute("weatherPlace",
+	                        (loc != null && !loc.trim().isEmpty()) ? loc : fes.getFesName());
+	            }
+	            if (wr.hasError()) model.addAttribute("weatherError", wr.error);
+	        } else {
+	            model.addAttribute("weatherError", "このフェスの開催地座標が未登録です（latitude/longitude を設定してください）。");
+	        }
+	    }
 
-	
-		return "item_list";
+	    return "item_list";
 	}
 
+	
 	//持ち物新規登録
 	@GetMapping("/new")
 	public String showNewForm(HttpSession session, Model model) {

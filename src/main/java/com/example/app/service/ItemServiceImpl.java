@@ -89,8 +89,8 @@ public class ItemServiceImpl implements ItemService {
             int q = qty.get(i);
 
             Item item = new Item();
-            item.setUserId(userId);                 // ← IntegerでOK（NOT NULL制約も満たす）
-            item.setFestivalId(festivalId);         // こちらもIntegerなら合わせてOK
+            item.setUserId(userId);                 
+            item.setFestivalId(festivalId);         
             item.setItemName(name);
             item.setCategory(category != null ? category : "AI提案");
             item.setQuantity(q);
@@ -98,8 +98,14 @@ public class ItemServiceImpl implements ItemService {
             item.setUpdatedAt(now);
 
             itemMapper.insert(item);
+        }}
+    
+       
+        @Override
+        public List<Item> suggest(Integer festivalId, Integer days, String lodging, String gender) {
+            return itemMapper.selectSuggestedItems(festivalId, days, lodging, gender);
         }
-    }}
+}
 
     
     

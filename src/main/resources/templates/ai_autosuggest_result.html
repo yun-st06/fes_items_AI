@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+	<title>AI自動提案結果</title>
+	<link rel="stylesheet" th:href="@{/css/ai_result.css}" />
+</head>
+
+<body>
+
+<h2>🎒AI提案</h2>
+
+<p>
+  フェスID：<span th:text="${festivalId}"></span> /
+  日数：<span th:text="${days}"></span> /
+  宿泊：<span th:text="${lodging}"></span> /
+  性別：<span th:text="${gender}"></span>
+</p>
+
+<form th:action="@{/ai/register}" method="post">
+  <table>
+    <tr><th>持ち物名</th><th>数量</th><th>選択</th></tr>
+    <tr th:each="it : ${items}">
+      <td th:text="${it.itemName}">名前</td>
+      <td><input type="number" name="qty" value="1" min="1"></td>
+      <td><input type="checkbox" name="names" th:value="${it.itemName}" checked></td>
+    </tr>
+  </table>
+
+  <input type="hidden" name="festivalId" th:value="${festivalId}">
+  <input type="hidden" name="category" value="AI提案">
+
+  <button type="submit">🧳 リストに登録する</button>
+</form>
+
+<a th:href="@{/ai/form}">条件を修正する</a>
+
+</body>
+</html>

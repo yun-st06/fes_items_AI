@@ -94,24 +94,20 @@
 			</div>
 		</div>
 
-
 		<!-- ページネーションリンク -->
 		<div class="pagination-area">
-			<div class="pagination">
-				<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-					<a th:href="@{/item/list(page=${pageNum}, festivalId=${festivalId}, category=${category})}"
-                      th:text="${pageNum}"
-                      th:classappend="${pageNum == currentPage} ? 'active' : ''">
-                   </a>
-
-					
-
-				</span>
-			   </div>
-			<a th:href="@{/item/new}" class="add-item-btn">新規持ち物登録</a>
+		  <div class="pagination">
+		    <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+		      <a th:href="@{/item/list(page=${pageNum},
+		                               festivalId=${festivalId},
+		                               category=${category})}"
+		         th:text="${pageNum}"
+		         th:classappend="${pageNum == currentPage} ? 'active' : ''">
+		      </a>
+		    </span>
+		  </div>
+		  <a th:href="@{/item/new}" class="add-item-btn">新規持ち物登録</a>
 		</div>
-
-
 	</div>
 
 	<a th:href="@{/memo/list}" class="fes-memo-btn">FES MEMO</a>
