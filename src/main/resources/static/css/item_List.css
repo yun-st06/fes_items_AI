@@ -338,3 +338,73 @@ h2 {
   max-width: 300px;
 }
 
+/* ==== 天気カード：中央寄せ＆映えるデザイン ==== */
+.weather-card {
+  /* 中央寄せ＆サイズ */
+  width: min(92%, 720px);
+  max-width: 720px;
+  margin: 20px auto;                /* ← 中央寄せはココ */
+  padding: 16px 18px;
+
+  /* 天気予報下の背景色*/
+  background:#E0FFFF;
+ 
+  border: 2px solid transparent;
+  border-radius: 18px;
+
+  /* ちょい演出（淡い光） */
+  position: relative;
+  overflow: hidden;
+  
+.weather-card::before{
+  content:"";
+  position:absolute; inset:-30%;
+  background: radial-gradient(circle at 30% 20%, rgba(255,192,203,.3), transparent 55%),
+              radial-gradient(circle at 80% 10%, rgba(255,235,245,.35), transparent 45%);
+  pointer-events:none;
+}
+
+/* 上部ヘッダー：中央寄せ＆アイコン大きめ */
+.weather-card__header{
+  display:flex; gap:14px; align-items:center; justify-content:center;
+  border-bottom: 0;                 /* 下線ナシ */
+  padding-bottom: 4px; margin-bottom: 10px;
+}
+.weather-card__icon{ width:72px; height:72px; }
+
+/* タイトル（開催地名）を少し大きく */
+.weather-card__header strong{
+  display:block;
+  font-size: 18px;
+  color:#ff4081;
+}
+
+/* メトリクスはカード風の4分割 */
+.weather-card__grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  text-align:center;
+}
+.weather-card__grid > div{
+  background:#fff;
+  border:1px solid #ffe0ea;
+  border-radius:12px;
+  padding:10px 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  font-size: 12px;
+}
+.weather-card__grid > div span{
+  display:block; opacity:.7; margin-bottom:2px; font-size:12px;
+}
+.weather-card__grid > div strong{
+  display:block; font-size:18px; color:#333; line-height:1.1;
+}
+
+/* スマホ調整 */
+@media (max-width: 560px){
+  .weather-card{ width: 96%; padding: 14px; }
+  .weather-card__icon{ width:60px; height:60px; }
+  .weather-card__grid{ grid-template-columns: repeat(2, 1fr); }
+}
+

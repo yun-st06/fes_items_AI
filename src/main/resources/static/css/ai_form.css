@@ -1,0 +1,170 @@
+/* ===== 共通: ロゴに応じてコンテンツの上余白を自動調整 ===== */
+:root{
+  /* 画面に応じて 140～240px の範囲でロゴ高さオフセットを自動調整 */
+  --logo-offset: clamp(140px, 20vh, 240px);
+}
+
+/* ===== 背景・全体 ===== */
+body {
+  background-image: url('/images/background.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  font-family: "Segoe UI", "Hiragino Sans", "Meiryo", sans-serif;
+  margin: 0;
+}
+
+/* ===== ロゴ（画面に固定） ===== */
+.logo-container {
+  position: fixed;
+  left: 50%;
+  top: 1vh;                 /* 必要なら 0.5vh～2vh で微調整可 */
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+}
+.logo-image {
+  width: 70vw;              /* 画面幅の 70% */
+  max-width: 800px;         /* PCでの上限 */
+  height: auto;
+}
+
+/* ===== 白カードを中央に置くラッパ ===== */
+.card-wrapper {
+  display: flex;
+  justify-content: center;              /* 横中央 */
+  align-items: flex-start;              /* 上寄せ配置 */
+  min-height: 100vh;
+  padding: calc(var(--logo-offset) + 24px) 20px 60px;
+  /* ↑ ロゴの“下”にカードが来る。さらに間を空けたい場合は +24px を増やす */
+  box-sizing: border-box;
+}
+
+/* ===== 白カード本体 ===== */
+.content-wrapper {
+  margin: 0 auto;
+  background: #ffffffee;
+  width: 100%;
+  max-width: 580px;
+  padding: 32px 28px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+h2 {
+	color: #ff4081;
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+
+
+/* ===== フォーム内 ===== */
+.ai-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/*select, input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}*/
+
+
+.select{
+	background: #fff;
+	color:#000;
+	border: 2px solid #ff4081;
+	border-radius: 8px;
+	padding: 6px 14px;
+	text-decoration: none;
+	font-size: 14px;
+	transition: 0.2s;
+}
+
+
+/* ===== アクション行：ボタン中央／リンク右 ===== */
+.actions {
+  position: relative;                 /* 右固定リンクの基準にする */
+  display: flex;
+  justify-content: center;            /* 中央にボタン */
+  align-items: center;
+  margin-top: 16px;
+  min-height: 40px;
+}
+
+/* 中央ボタン */
+.actions button {
+  background-color: #ff6f91;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 auto;
+}
+.actions button:hover { background-color: #ff3e71; }
+
+/* 右側リンク（白カード内右寄せ） */
+.actions .link {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-decoration: none;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+/* ===== ラベル左・入力右の2カラム行 ===== */
+.ai-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 1行を横並びにする */
+.form-row {
+  display: grid;
+  grid-template-columns: 120px auto; /* 左=ラベル幅 / 右=入力 */
+  align-items: center;
+  gap: 10px;
+}
+
+/* ラベルの見た目 */
+.form-row > label {
+  text-align: left;      /* 左寄せ */
+  font-weight: 600;
+  color: #444;
+}
+
+/* 入力（select/number）の横幅を“少し細め”にする */
+.form-row .select {
+  width: 260px;          /* ← 幅を縮小（好みで 220〜300px に） */
+  max-width: 100%;
+  background: #fff;
+  color:#000;
+  border: 2px solid #ff4081;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+/* モバイルでは縦積みにして全幅に */
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr; /* 1カラムに */
+  }
+  .form-row .select {
+    width: 100%;
+  }
+}
+

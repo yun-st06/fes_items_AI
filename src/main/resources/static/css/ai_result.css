@@ -1,124 +1,98 @@
+/* ===== ロゴ高さに応じて上余白を自動調整（リスト画面と同じ思想） ===== */
+:root{
+  --logo-offset: clamp(140px, 20vh, 240px);
+}
+
+/* 背景と全体 */
+html, body { height: 100%; overflow: hidden; } /* 背景は固定、スクロールはカード内で */
 body {
-  font-family: "Segoe UI", "Hiragino Sans", "Meiryo", sans-serif;
-  background: #fafafa;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  	background-color: #fff5f5;
-  	color: #333;
-  	padding: calc(var(--logo-offset) + 40px) 20px 0; /* ← topだけじゃなく右に20pxも */
-    /* 既存の background 等はそのまま */
-  	background-image: url('/images/background.png');
-  	background-size: cover;
-  	background-position: top center;
-  	background-repeat: no-repeat;
-  	min-height: 100vh;
-  	font-family: "Helvetica", "Arial", sans-serif;
-  }
+  font-family: "Segoe UI","Hiragino Sans","Meiryo",sans-serif;
+  color: #333;
+  padding: calc(var(--logo-offset) + 10px) 20px 0; /* ロゴの下にカードが来る */
+  background-image: url('/images/background.png');
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
 
+/* ロゴ（固定） */
+.logo-container{
+  position: fixed; left: 50%; top: 1vh; transform: translateX(-50%);
+  z-index: 10; pointer-events: none;
+}
+.logo-image{ width: 70vw; max-width: 800px; height: auto; }
 
-.wrap {
-  max-width: 900px;
-  margin: 40px auto;
+/* 白カード（リスト画面の見た目に合わせる） */
+.wrap{
+  width: min(90vw, 820px);
+  margin: 0 auto 50px;
   padding: 24px;
   background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,.2);
+  max-height: 65vh;             /* ← ここでカード内スクロールにする */
+  overflow-y: auto;
+}
+
+/* タイトル（ピンク統一） */
+h2{ color:#ff4081; text-align:center; margin-bottom: 20px; }
+
+/* エラー */
+.error{
+  margin: 12px 0; padding: 10px 12px;
+  background: #fef2f2; color:#b91c1c; border:1px solid #fecaca; border-radius:8px;
+}
+
+/* 提案一覧（チェック＋数量） */
+.list{
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  margin-bottom: 12px;
-}
-
-.error {
-  margin: 12px 0;
-  padding: 10px 12px;
-  background: #fef2f2;
-  color: #b91c1c;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-}
-
-
-.list {
-  border: 1px solid #ddd;
-  border-radius: 8px;
   padding: 12px;
   margin-top: 12px;
   background: #fcfcfc;
 }
+.row{
+  display: grid; grid-template-columns: 1fr 80px; /* 左=名前 / 右=数量 */
+  align-items: center; gap: 12px;
+  padding: 6px 0; border-bottom: 1px solid #eee;
+}
+.row:last-child{ border-bottom: none; }
+.name{ display:flex; align-items:center; gap:8px; }
+.qty{ width: 80px; text-align: center; }
 
-.row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
+/* details(元テキスト) */
+details{ margin-top: 12px; }
+.raw-text{
+  white-space: pre-wrap; background:#f9f9f9; border:1px solid #eee;
+  padding: 8px; border-radius: 6px;
 }
 
-.row:last-child {
-  border-bottom: none;
+/* ===== アクション行：中央=ボタン／左=戻る／右=一覧 ===== */
+.actions{
+  position: relative;
+  display: flex; justify-content: center; align-items: center;
+  gap: 16px; margin-top: 16px; min-height: 44px;
 }
 
-.name {
-  flex: 1;
+/* 中央ボタン（フォームと同じピンク系） */
+.actions button{
+  background: #ff6f91; color:#fff; border:none;
+  padding: 10px 18px; border-radius: 10px; font-weight: bold; cursor: pointer;
 }
+.actions button:hover{ background:#ff3e71; }
 
-.qty {
-  width: 80px;
-  text-align: center;
+/* 左右リンクをカード内の端に固定 */
+.actions .left-link,
+.actions .right-link{
+  position: absolute; top:50%; transform: translateY(-50%);
+  font-weight: bold; text-decoration: none;
 }
+.actions .left-link{ left: 0; color:#2563eb; }
+.actions .right-link{ right: 0; color:#2563eb; }
 
-fieldset {
-  margin-top: 16px;
-  padding: 10px 14px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f8f9fa;
-}
-
-legend {
-  font-weight: bold;
-}
-
-.festival-info {
-  margin-left: 16px;
-}
-
-.actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 16px;
-}
-
-button {
-  background: #3b82f6;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #2563eb;
-}
-
-a {
-  text-decoration: none;
-  color: #2563eb;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-details {
-  margin-top: 12px;
-}
-
-.raw-text {
-  white-space: pre-wrap;
-  background: #f9f9f9;
-  border: 1px solid #eee;
-  padding: 8px;
-  border-radius: 6px;
+/* モバイル調整 */
+@media (max-width: 480px){
+  .wrap{ max-height: 70vh; padding: 18px; }
+  .row{ grid-template-columns: 1fr 64px; }
 }
